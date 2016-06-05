@@ -8,7 +8,9 @@
 
 import UIKit
 import FirebaseStorage
+import Firebase
 
+/// Takes an image URL and returns a UIImage?
 func downloadImage(url: String) -> UIImage? {
     
     var downloadedImage: UIImage?
@@ -25,4 +27,12 @@ func downloadImage(url: String) -> UIImage? {
     }
     
     return downloadedImage
+}
+
+func albumAddedToUser(snapshot: FIRDataSnapshot) {
+    
+}
+
+func albumRemovedFromUser(snapshot: FIRDataSnapshot) {
+    print("\(#function):: Album was removed from user - \(snapshot)")
 }

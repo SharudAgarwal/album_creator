@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7B06D6871D0374AF0027004A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B06D6861D0374AF0027004A /* Constants.swift */; };
 		7B06D68B1D038D350027004A /* AlbumLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B06D68A1D038D350027004A /* AlbumLib.swift */; };
+		7B06D68D1D04AECC0027004A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7B06D68C1D04AECB0027004A /* GoogleService-Info.plist */; };
 		7B5BCA291CFCD29100055981 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BCA281CFCD29100055981 /* AppDelegate.swift */; };
 		7B5BCA2E1CFCD29100055981 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5BCA2C1CFCD29100055981 /* Main.storyboard */; };
 		7B5BCA301CFCD29100055981 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B5BCA2F1CFCD29100055981 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		7B06D6861D0374AF0027004A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7B06D68A1D038D350027004A /* AlbumLib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumLib.swift; sourceTree = "<group>"; };
+		7B06D68C1D04AECB0027004A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7B5BCA251CFCD29100055981 /* Album Creator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Album Creator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B5BCA281CFCD29100055981 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B5BCA2D1CFCD29100055981 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -85,14 +87,15 @@
 			isa = PBXGroup;
 			children = (
 				7B5BCA281CFCD29100055981 /* AppDelegate.swift */,
-				7B5BCA2C1CFCD29100055981 /* Main.storyboard */,
-				7B5BCA2F1CFCD29100055981 /* Assets.xcassets */,
-				7B5BCA311CFCD29100055981 /* LaunchScreen.storyboard */,
-				7B5BCA341CFCD29100055981 /* Info.plist */,
 				7B5BCA3A1CFCD66200055981 /* AlbumsTableViewController.swift */,
 				7B5BCA3C1CFE9CDE00055981 /* AlbumsTableViewCell.swift */,
 				7B06D6861D0374AF0027004A /* Constants.swift */,
 				7B06D68A1D038D350027004A /* AlbumLib.swift */,
+				7B5BCA2C1CFCD29100055981 /* Main.storyboard */,
+				7B5BCA311CFCD29100055981 /* LaunchScreen.storyboard */,
+				7B5BCA2F1CFCD29100055981 /* Assets.xcassets */,
+				7B06D68C1D04AECB0027004A /* GoogleService-Info.plist */,
+				7B5BCA341CFCD29100055981 /* Info.plist */,
 			);
 			path = "Album Creator";
 			sourceTree = "<group>";
@@ -160,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B5BCA331CFCD29100055981 /* LaunchScreen.storyboard in Resources */,
+				7B06D68D1D04AECC0027004A /* GoogleService-Info.plist in Resources */,
 				7B5BCA301CFCD29100055981 /* Assets.xcassets in Resources */,
 				7B5BCA2E1CFCD29100055981 /* Main.storyboard in Resources */,
 			);

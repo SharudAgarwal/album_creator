@@ -8,13 +8,15 @@ target 'Album Creator' do
   # Pods for Album Creator
   pod 'Firebase/Core'
   pod 'Firebase/Storage'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Crash'
+#  pod 'Firebase/Auth'
+#  pod 'Firebase/Crash'
   pod 'Firebase/Database'
 
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
 
   pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
+
+#  pod 'IQKeyboardManagerSwift'
 
 end
