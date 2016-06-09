@@ -12,6 +12,8 @@ import FirebaseDatabase
 
 import SwiftyJSON
 
+private let reuseIdentifier = "albumCell"
+
 class AlbumsTableViewController: UITableViewController {
     
 //    var myAlbums = Albums().albums
@@ -22,6 +24,8 @@ class AlbumsTableViewController: UITableViewController {
     private var usersRefHandle: FIRDatabaseHandle!
     private let userID: String = "user1"
     private var usersAlbumNamesArr = [AnyObject?]()
+    
+    var tappedAlbumID: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +51,7 @@ class AlbumsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("albumCell", forIndexPath: indexPath) as! AlbumsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AlbumsTableViewCell
         // unpack album data from Firebase DataSnapshot
         let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
@@ -59,6 +63,20 @@ class AlbumsTableViewController: UITableViewController {
         }
         return cell
             
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let albumSnapshot = self.albums[indexPath.row]
+        self.tappedAlbumID = albumSnapshot.key
+        performSegueWithIdentifier("toPictureViewController", sender: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toPictureViewController" {
+            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
+                pictureVC.albumID = self.tappedAlbumID
+            }
+        }
     }
     
     /*

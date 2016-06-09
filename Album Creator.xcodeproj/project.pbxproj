@@ -16,6 +16,8 @@
 		7B5BCA331CFCD29100055981 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5BCA311CFCD29100055981 /* LaunchScreen.storyboard */; };
 		7B5BCA3B1CFCD66200055981 /* AlbumsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BCA3A1CFCD66200055981 /* AlbumsTableViewController.swift */; };
 		7B5BCA3D1CFE9CDE00055981 /* AlbumsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BCA3C1CFE9CDE00055981 /* AlbumsTableViewCell.swift */; };
+		7BBC1F191D0683F900A827C5 /* PicturesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC1F181D0683F900A827C5 /* PicturesCollectionViewController.swift */; };
+		7BBC1F1B1D06EF9D00A827C5 /* PicturesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC1F1A1D06EF9D00A827C5 /* PicturesCollectionViewCell.swift */; };
 		BF6070569397E0D1CC50986B /* Pods_Album_Creator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B47ACF113235DDEB5CD66D /* Pods_Album_Creator.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +33,8 @@
 		7B5BCA341CFCD29100055981 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B5BCA3A1CFCD66200055981 /* AlbumsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumsTableViewController.swift; sourceTree = "<group>"; };
 		7B5BCA3C1CFE9CDE00055981 /* AlbumsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumsTableViewCell.swift; sourceTree = "<group>"; };
+		7BBC1F181D0683F900A827C5 /* PicturesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PicturesCollectionViewController.swift; sourceTree = "<group>"; };
+		7BBC1F1A1D06EF9D00A827C5 /* PicturesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PicturesCollectionViewCell.swift; sourceTree = "<group>"; };
 		99E5F438D0DE486A327BF7E5 /* Pods-Album Creator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album Creator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Album Creator/Pods-Album Creator.debug.xcconfig"; sourceTree = "<group>"; };
 		D4B47ACF113235DDEB5CD66D /* Pods_Album_Creator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album_Creator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFFDB6CE3981DD2F2A14649 /* Pods-Album Creator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album Creator.release.xcconfig"; path = "Pods/Target Support Files/Pods-Album Creator/Pods-Album Creator.release.xcconfig"; sourceTree = "<group>"; };
@@ -89,6 +93,8 @@
 				7B5BCA281CFCD29100055981 /* AppDelegate.swift */,
 				7B5BCA3A1CFCD66200055981 /* AlbumsTableViewController.swift */,
 				7B5BCA3C1CFE9CDE00055981 /* AlbumsTableViewCell.swift */,
+				7BBC1F181D0683F900A827C5 /* PicturesCollectionViewController.swift */,
+				7BBC1F1A1D06EF9D00A827C5 /* PicturesCollectionViewCell.swift */,
 				7B06D6861D0374AF0027004A /* Constants.swift */,
 				7B06D68A1D038D350027004A /* AlbumLib.swift */,
 				7B5BCA2C1CFCD29100055981 /* Main.storyboard */,
@@ -229,6 +235,8 @@
 				7B5BCA291CFCD29100055981 /* AppDelegate.swift in Sources */,
 				7B06D68B1D038D350027004A /* AlbumLib.swift in Sources */,
 				7B5BCA3D1CFE9CDE00055981 /* AlbumsTableViewCell.swift in Sources */,
+				7BBC1F191D0683F900A827C5 /* PicturesCollectionViewController.swift in Sources */,
+				7BBC1F1B1D06EF9D00A827C5 /* PicturesCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
