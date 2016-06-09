@@ -1,8 +1,8 @@
 //
-//  AlbumsTableViewController.swift
+//  AlbumsCollectionViewController.swift
 //  Album Creator
 //
-//  Created by Sharud Agarwal on 5/30/16.
+//  Created by Sharud Agarwal on 6/9/16.
 //  Copyright © 2016 agarwals. All rights reserved.
 //
 
@@ -14,9 +14,9 @@ import SwiftyJSON
 
 private let reuseIdentifier = "albumCell"
 
-class AlbumsTableViewController: UITableViewController {
-    
-//    var myAlbums = Albums().albums
+class AlbumsCollectionViewController: UICollectionViewController {
+
+    //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
     var albums: [FIRDataSnapshot]! = []
     
@@ -27,7 +27,7 @@ class AlbumsTableViewController: UITableViewController {
     private let picturesSegue = "toPicturesCollectionViewController"
     
     var tappedAlbumID: String?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print(#function)
@@ -36,8 +36,7 @@ class AlbumsTableViewController: UITableViewController {
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-//         self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,14 +44,29 @@ class AlbumsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
+    /*
+    // MARK: - Navigation
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using [segue destinationViewController].
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+    // MARK: UICollectionViewDataSource
+
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albums.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AlbumsTableViewCell
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AlbumsCollectionViewCell
         // unpack album data from Firebase DataSnapshot
         let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
@@ -63,10 +77,9 @@ class AlbumsTableViewController: UITableViewController {
             // Todo: Need to implement nil image object class from github
         }
         return cell
-            
     }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+
+    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let albumSnapshot = self.albums[indexPath.row]
         self.tappedAlbumID = albumSnapshot.key
         performSegueWithIdentifier(picturesSegue, sender: nil)
@@ -80,56 +93,11 @@ class AlbumsTableViewController: UITableViewController {
         }
     }
     
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     // Will update the table by calling updateTable()
     override func viewWillAppear(animated: Bool) {
         print(#function)
-        updateTable()
-        print("End of updateTable")
+        updateCollection()
+        print("End of updateCollection")
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -137,9 +105,9 @@ class AlbumsTableViewController: UITableViewController {
     }
     
     /// Updates albums table view by refetching each image url and album name.
-    func updateTable() {
+    func updateCollection() {
         self.albums.removeAll()
-        self.tableView.reloadData()
+        self.collectionView?.reloadData()
         // Listen for new Albums from Firebase database
         usersRefHandle = self.databaseRef.child("users/\(userID)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
             // get list of albums the user belongs to from the snapshot
@@ -150,13 +118,41 @@ class AlbumsTableViewController: UITableViewController {
                 // add album to table
                 print(snapshot.description)
                 self.albums.append(snapshot)
-                self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)], withRowAnimation: .Automatic)
+                self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)])
             })
-//            albumAddedToUser(snapshot)
+            //            albumAddedToUser(snapshot)
         })
-//        albumsRefHandle = self.databaseRef.child("users/$uid").observeEventType(.ChildRemoved, withBlock: { (FIRDataSnapshot) in
-//            albumRemovedFromUser(FIRDataSnapshot)
-//        })
     }
+    
+    // MARK: UICollectionViewDelegate
+
+    /*
+    // Uncomment this method to specify if the specified item should be highlighted during tracking
+    override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    */
+
+    /*
+    // Uncomment this method to specify if the specified item should be selected
+    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    */
+
+    /*
+    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
+    override func collectionView(collectionView: UICollectionView, shouldShowMenuForItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return false
+    }
+
+    override func collectionView(collectionView: UICollectionView, canPerformAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool {
+        return false
+    }
+
+    override func collectionView(collectionView: UICollectionView, performAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) {
+    
+    }
+    */
 
 }
