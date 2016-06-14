@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 import Firebase
 import FirebaseDatabase
@@ -14,9 +15,12 @@ import FirebaseStorage
 
 import SwiftyJSON
 
-class PicturesCollectionViewController: UICollectionViewController {
+//import CryptoSwift
+
+class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     private var databaseRef: FIRDatabaseReference!
+    private var storageRef: FIRStorageReference!
     private var pictures: [FIRDataSnapshot]! = []
     private let reuseIdentifier = "pictureCell"
     
@@ -24,9 +28,72 @@ class PicturesCollectionViewController: UICollectionViewController {
     
     var albumID: String?
     
+    @IBAction func addPicturesToAlbum(sender: UIBarButtonItem) {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
+            picker.sourceType = UIImagePickerControllerSourceType.Camera
+            picker.allowsEditing = false
+        } else {
+            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            picker.allowsEditing = false
+        }
+        
+        presentViewController(picker, animated: true, completion:nil)
+    }
+
+/*
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        
+    }
+*/
+    
+    
+ 
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        picker.dismissViewControllerAnimated(true, completion:nil)
+        
+        let referenceUrl = info[UIImagePickerControllerReferenceURL] as! NSURL
+//        print(hash?.toHexString())
+        let assets = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil)
+        print("The number of assets fetched from Photos: \(assets.count)")
+        let asset = assets.firstObject
+        asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, editingInfo) in
+            let imageFile = contentEditingInput?.fullSizeImageURL
+//            let filePath = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(NSDate.timeIntervalSinceReferenceDate() * 1000))/\(referenceUrl.lastPathComponent!)"
+            let imageID = stringUpToChar((asset?.localIdentifier)!, delimitingChar: "/")
+/*            let imageFileName = referenceUrl.lastPathComponent
+            var imageData: NSData?
+            if (((imageFileName?.lowercaseString.containsString("jpg") != nil) || (imageFileName?.lowercaseString.containsString("jpeg")) != nil)) {
+                imageData = UIImageJPEGRepresentation(info[UIImagePickerControllerOriginalImage] as! UIImage, 1.0)
+            } else if (imageFileName?.lowercaseString.containsString("png") != nil) {
+                imageData = UIImagePNGRepresentation(info[UIImagePickerControllerOriginalImage] as! UIImage)
+            } else {
+                fatalError("\(#function):: ERROR: Trying to hash an image of type \(imageFileName!)")
+            }
+//            let imageHash = imageData?.sha256()?.toHexString()
+*/
+            let filePath = "pictures/\(self.albumID!)/\(imageID)"
+//            let metadata = FIRStorageMetadata()
+//            metadata.contentType = "image/jpeg"
+            let filepathRef = self.storageRef.child(filePath)
+//            filepathRef.putFile(imageFile!)
+            filepathRef.putFile(imageFile!, metadata: nil, completion: { (metadata, error) in
+                if let error = error {
+                    print("Error uploading: \(error.description)")
+                    return
+                } else {
+                    print("Upload Succeeded!")
+                }
+            })
+
+        })  //requestContentEditingInputWithOptions
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         databaseRef = FIRDatabase.database().reference()
+        storageRef = FIRStorage.storage().reference()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

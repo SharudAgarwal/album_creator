@@ -15,7 +15,9 @@ target 'Album Creator' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
 
-  pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
+  pod 'SwiftyJSON'#, :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
+
+  pod 'CryptoSwift'
 
 #  pod 'IQKeyboardManagerSwift'
 

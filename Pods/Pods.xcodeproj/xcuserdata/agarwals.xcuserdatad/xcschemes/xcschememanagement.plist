@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CryptoSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FBSDKCoreKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -37,12 +42,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>52D82BFDD1E808D9CB257431922C1EE4</key>
+		<key>30943B25F0DEC51D0012EB94E0670356</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>66693848877744058F965138840F9E50</key>
+		<key>52D82BFDD1E808D9CB257431922C1EE4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,7 +57,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A181967F794A0C07AE690F441753D785</key>
+		<key>BEAFEBA9984C8198DE69D1E4E99DA575</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D00B62B2E558D8FFA823B574FDA255A1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

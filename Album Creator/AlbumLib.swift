@@ -36,3 +36,39 @@ func albumAddedToUser(snapshot: FIRDataSnapshot) {
 func albumRemovedFromUser(snapshot: FIRDataSnapshot) {
     print("\(#function):: Album was removed from user - \(snapshot)")
 }
+
+func imageType(imgData : NSData) -> String
+{
+    var c = [UInt8](count: 1, repeatedValue: 0)
+    imgData.getBytes(&c, length: 1)
+    
+    let ext : String
+    
+    switch (c[0]) {
+    case 0xFF:
+        
+        ext = "jpg"
+        
+    case 0x89:
+        
+        ext = "png"
+    case 0x47:
+        
+        ext = "gif"
+    case 0x49, 0x4D :
+        ext = "tiff"
+    default:
+        ext = "" //unknown
+    }
+    
+    return ext
+}
+
+func stringUpToChar(origString: String, delimitingChar: Character) -> String {
+    let chars = origString.characters
+    if let idx = chars.indexOf(delimitingChar) {
+        return String(chars.prefixUpTo(idx))
+    }
+    return origString
+}
+

@@ -5,6 +5,7 @@ PODS:
   - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.7.0)
+  - CryptoSwift (0.5)
   - FBSDKCoreKit (4.12.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.12.0):
@@ -40,24 +41,17 @@ PODS:
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
+  - CryptoSwift
   - FBSDKCoreKit
   - FBSDKLoginKit
   - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
-  - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
-
-EXTERNAL SOURCES:
-  SwiftyJSON:
-    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
-
-CHECKOUT OPTIONS:
-  SwiftyJSON:
-    :commit: 2a5b70f06001316d4fb54501edc70b4084705da0
-    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
+  - SwiftyJSON
 
 SPEC CHECKSUMS:
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  CryptoSwift: b89d89caad9e5bc417b054078635eeb22bcddf54
   FBSDKCoreKit: 6e56d5a2a64a755ad4efb5dbeee8f82fb1b99775
   FBSDKLoginKit: 03f68a8d48c2c8bb81d7eb8097973d483543e1f6
   Firebase: 6c80ac28d59d06bfd9152a7b6ea17625ca93183d
@@ -71,6 +65,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: 3efcfe8bbf2708f20aab25165524e0727b05894b
+PODFILE CHECKSUM: a34d5c9c97ff6c67fcfd4f7d647668fa1ed8fa18
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.0.1
