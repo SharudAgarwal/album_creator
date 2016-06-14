@@ -17,7 +17,7 @@ target 'Album Creator' do
 
   pod 'SwiftyJSON'#, :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
 
-  pod 'CryptoSwift'
+#  pod 'CryptoSwift'
 
 #  pod 'IQKeyboardManagerSwift'
 
