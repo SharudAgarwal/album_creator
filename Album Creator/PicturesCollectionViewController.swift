@@ -15,6 +15,8 @@ import FirebaseStorage
 
 import SwiftyJSON
 
+import Kingfisher
+
 //import CryptoSwift
 
 class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -32,7 +34,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let picker = UIImagePickerController()
         picker.delegate = self
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
-            picker.sourceType = UIImagePickerControllerSourceType.Camera
+            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             picker.allowsEditing = false
         } else {
             picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
@@ -61,7 +63,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, editingInfo) in
             let imageFile = contentEditingInput?.fullSizeImageURL
 //            let filePath = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(NSDate.timeIntervalSinceReferenceDate() * 1000))/\(referenceUrl.lastPathComponent!)"
-            let imageID = stringUpToChar((asset?.localIdentifier)!, delimitingChar: "/")
+//            let imageID = stringUpToChar((asset?.localIdentifier)!, delimitingChar: "/")
+            let imageID = self.databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
 /*            let imageFileName = referenceUrl.lastPathComponent
             var imageData: NSData?
             if (((imageFileName?.lowercaseString.containsString("jpg") != nil) || (imageFileName?.lowercaseString.containsString("jpeg")) != nil)) {
@@ -84,6 +87,10 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
                     return
                 } else {
                     print("Upload Succeeded!")
+//                    let downloadURL = metadata!.downloadURL()
+//                    self.updateDatabaseWithImage(imageID, url: "\(Constants.FirebaseFields.storageURL)/pictures/\(self.albumID!)/\(imageID)")
+//                    self.updateDatabaseWithImage(imageID, url: downloadURL!.absoluteString)
+                    self.updateDatabaseWithImage(imageID)
                 }
             })
 
@@ -104,11 +111,12 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     }
     
     override func viewWillDisappear(animated: Bool) {
+        print(#file + "::" + #function)
         self.databaseRef.child("pictures/\(albumID!)").removeObserverWithHandle(picturesRefHandle)
     }
     
     override func viewWillAppear(animated: Bool) {
-        print(#function)
+        print(#file + "::" + #function)
         updatePicturesCollection()
         print("End of updatePicturesCollection")
     }
@@ -155,14 +163,45 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
-        if let pictureURL = pictureJSON[Constants.PictureFields.url].string {
-            cell.pictureImageView.image = downloadImage(pictureURL)
+        
+        cell.pictureImageView.kf_showIndicatorWhenLoading = true
+        if let picturePath = pictureJSON[Constants.PictureFields.pathToImage].string {
+            print("DEBUG: picturePath = \(picturePath)")
+            
+            let imageRef = storageRef.child(picturePath)
+            imageRef.downloadURLWithCompletion { (URL, error) -> Void in
+                
+                if let error = error {
+                    print("\(#function):: error = \(error.localizedDescription)")
+                } else {
+                    print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
+                    cell.pictureImageView.kf_setImageWithURL(URL!, placeholderImage: nil)
+                }
+            }
+            
         } else {
-            // handle error
+            print("\(#function):: picturePath does not exist for current snapshot")
         }
-        // Configure the cell
-//        cell.pictureImageView
+        
         return cell
+    }
+    
+    override func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        // This will cancel all unfinished downloading task when the cell disappearing.
+        // swiftlint:disable force_cast
+        (cell as! PicturesCollectionViewCell).pictureImageView.kf_cancelDownloadTask()
+    }
+    
+//    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+//        // move your data order
+//    }
+    
+    func updateDatabaseWithImage(name: String) {
+//        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
+        let post = [Constants.PictureFields.name: name,
+                    Constants.PictureFields.pathToImage: "pictures/\(self.albumID!)/\(name)"]
+        let childUpdates = ["pictures/\(self.albumID!)/\(name)": post]
+        databaseRef.updateChildValues(childUpdates)
     }
 
     // MARK: UICollectionViewDelegate

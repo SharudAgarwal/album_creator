@@ -10,7 +10,7 @@ struct Constants {
     
     struct AlbumFields {
         static let name = "albumName"
-        static let createdAtTimestamp = "createdAtTimestamp"
+        static let createdAt = "createdAtTimestamp"
         static let lastModified = "lastModifiedAtTimestamp"
         static let numOfPics = "numOfPics"
         static let numOfUsers = "numOfUsers"
@@ -22,18 +22,20 @@ struct Constants {
         static let profilePic = "profilePicture"
         static let numOfAlbums = "numOfAlbums"
         static let albums = "albums"
-        static let createdAtTimestamp = "createdAtTimestamp"
+        static let joinedAt = "joinedAtTimestamp"
+        static let lastLogIn = "lastLoggedInAtTimestamp"
     }
     
     struct PictureFields {
         static let name = "pictureName"
-        static let addedTimestamp = "addedAtTimestamp"
+        static let addedAt = "addedAtTimestamp"
         static let fileType = "fileType"
-        static let url = "URL"
+        static let pathToImage = "pathToImage"
         static let caption = "caption"
     }
     
     struct FirebaseFields {
         static let urlPrefix = "gs://"
+        static let storageURL = "gs://album-creator-bff89.appspot.com"
     }
 }

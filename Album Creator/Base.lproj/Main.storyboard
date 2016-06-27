@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="e2c-BO-EEw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="jsZ-9h-chH">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -67,7 +68,82 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1r3-ke-i9c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1218" y="607"/>
+            <point key="canvasLocation" x="4830" y="191"/>
+        </scene>
+        <!--SignInViewController-->
+        <scene sceneID="759-7f-7kn">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zvw-O7-vTa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController title="SignInViewController" id="jsZ-9h-chH" customClass="SignInViewController" customModule="Album_Creator" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wpF-A7-Vxc"/>
+                        <viewControllerLayoutGuide type="bottom" id="OPF-FG-hD8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ulW-sE-YvM">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="743" translatesAutoresizingMaskIntoConstraints="NO" id="4tk-s8-3pa" userLabel="FBLoginButtonView">
+                                <rect key="frame" x="20" y="550" width="560" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0lp-Zt-hGh"/>
+                                    <constraint firstAttribute="height" constant="40" id="6eq-Yz-e0Y"/>
+                                    <constraint firstAttribute="width" secondItem="4tk-s8-3pa" secondAttribute="height" multiplier="421:40" id="drE-d5-nTA"/>
+                                    <constraint firstAttribute="width" secondItem="4tk-s8-3pa" secondAttribute="height" multiplier="41:4" id="yQb-VF-57M"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6eq-Yz-e0Y"/>
+                                        <exclude reference="drE-d5-nTA"/>
+                                        <exclude reference="yQb-VF-57M"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OPF-FG-hD8" firstAttribute="top" secondItem="4tk-s8-3pa" secondAttribute="bottom" constant="20" id="58C-nu-mIe"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="top" secondItem="wpF-A7-Vxc" secondAttribute="bottom" constant="520" id="6Mx-0w-bat"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="centerY" secondItem="ulW-sE-YvM" secondAttribute="centerY" id="7ON-c2-oZd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="BQk-1L-pG1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" id="GGj-Fz-w1k"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="centerX" secondItem="ulW-sE-YvM" secondAttribute="centerX" id="Rmv-ga-nRc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="8" id="Veg-uO-SAd"/>
+                            <constraint firstItem="OPF-FG-hD8" firstAttribute="top" secondItem="4tk-s8-3pa" secondAttribute="bottom" constant="20" id="Wsj-He-dcM"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="top" secondItem="wpF-A7-Vxc" secondAttribute="bottom" constant="521" id="cNC-fE-Wve"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="centerX" secondItem="ulW-sE-YvM" secondAttribute="centerX" id="cXh-hn-LcK"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="4tk-s8-3pa" secondAttribute="leading" id="eQd-ix-R9x"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="leading" secondItem="ulW-sE-YvM" secondAttribute="leadingMargin" constant="75" id="fs6-Gg-5Z3"/>
+                            <constraint firstItem="4tk-s8-3pa" firstAttribute="leading" secondItem="ulW-sE-YvM" secondAttribute="leadingMargin" constant="75" id="kkk-Eb-MKk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="vfr-YI-q4E"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="whv-lA-ZUp"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="6Mx-0w-bat"/>
+                                <exclude reference="7ON-c2-oZd"/>
+                                <exclude reference="BQk-1L-pG1"/>
+                                <exclude reference="Rmv-ga-nRc"/>
+                                <exclude reference="Veg-uO-SAd"/>
+                                <exclude reference="cNC-fE-Wve"/>
+                                <exclude reference="cXh-hn-LcK"/>
+                                <exclude reference="fs6-Gg-5Z3"/>
+                                <exclude reference="kkk-Eb-MKk"/>
+                                <exclude reference="vfr-YI-q4E"/>
+                                <exclude reference="whv-lA-ZUp"/>
+                                <exclude reference="Wsj-He-dcM"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="cPR-O8-44U"/>
+                    <connections>
+                        <outlet property="FBLoginButtonView" destination="4tk-s8-3pa" id="3Bq-hy-zbS"/>
+                        <segue destination="erH-4X-w0R" kind="presentation" identifier="toAlbumsCollectionViewController" id="lTa-Ig-5c0"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2565" y="804"/>
         </scene>
         <!--PicturesCollectionViewController-->
         <scene sceneID="lLK-of-IAa">
@@ -123,25 +199,25 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj0-9f-wmo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1936" y="607"/>
+            <point key="canvasLocation" x="5668" y="191"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="fcP-FF-FI8">
+        <scene sceneID="JbD-H7-1wo">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="e2c-BO-EEw" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="erH-4X-w0R" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="AyP-L6-x0a">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="K3m-y8-rw7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="DgK-DF-3Qw" kind="relationship" relationship="rootViewController" id="pzI-kB-Vbo"/>
+                        <segue destination="DgK-DF-3Qw" kind="relationship" relationship="rootViewController" id="FpO-2P-1km"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="A41-87-Qaz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qJm-zA-eZb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="488" y="607"/>
+            <point key="canvasLocation" x="3554" y="315"/>
         </scene>
     </scenes>
 </document>

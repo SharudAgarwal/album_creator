@@ -22,7 +22,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     private var albumsRefHandle: FIRDatabaseHandle!
     private var usersRefHandle: FIRDatabaseHandle!
-    private let userID: String = "user1"
+//    private let userID: String = "user1"
     private var usersAlbumNamesArr = [AnyObject?]()
     private let picturesSegue = "toPicturesCollectionViewController"
     
@@ -30,7 +30,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function)
+        print("\(#function):: Albums Collection View did load")
         databaseRef = FIRDatabase.database().reference()
         
         // Uncomment the following line to preserve selection between presentations
@@ -95,13 +95,15 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     // Will update the table by calling updateTable()
     override func viewWillAppear(animated: Bool) {
-        print(#function)
+        print(#file + "::" + #function)
+        self.navigationItem.setHidesBackButton(true, animated: false)
         updateCollection()
         print("End of updateCollection")
     }
     
     override func viewWillDisappear(animated: Bool) {
-        self.databaseRef.child("users/\(userID)/albums").removeObserverWithHandle(usersRefHandle)
+        print(#file + "::" + #function)
+        self.databaseRef.child("users/\(User.name)/albums").removeObserverWithHandle(usersRefHandle)
     }
     
     /// Updates albums table view by refetching each image url and album name.
@@ -109,7 +111,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         self.albums.removeAll()
         self.collectionView?.reloadData()
         // Listen for new Albums from Firebase database
-        usersRefHandle = self.databaseRef.child("users/\(userID)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        print("\(#function):: username = \(User.name)")
+        usersRefHandle = self.databaseRef.child("users/\(User.name)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
             // get list of albums the user belongs to from the snapshot
             print("\(#function):: This user is a member of the following albums: \(snapshot.key)")
             let albumUserIsIn = snapshot.key
