@@ -19,12 +19,13 @@ import Kingfisher
 
 //import CryptoSwift
 
-class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
 
     private var databaseRef: FIRDatabaseReference!
     private var storageRef: FIRStorageReference!
     private var pictures: [FIRDataSnapshot]! = []
     private let reuseIdentifier = "pictureCell"
+    private let numberOfItemsPerRow = 3
     
     private var picturesRefHandle: FIRDatabaseHandle!
     
@@ -164,6 +165,29 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         (cell as! PicturesCollectionViewCell).pictureImageView.kf_cancelDownloadTask()
     }
     
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
+        let totalSpace = flowLayout.sectionInset.left + flowLayout.sectionInset.right + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsPerRow - 1))
+        let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(numberOfItemsPerRow))
+        return CGSize(width: size, height: size)
+    }
+
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        // Code here will execute before the rotation begins.
+        // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
+        coordinator.animateAlongsideTransition({ (nil) -> Void in
+            // Place code here to perform animations during the rotation.
+            // You can pass nil for this closure if not necessary.
+        },
+        completion: { (context) -> Void in
+            // Code here will execute after the rotation has finished.
+            // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
+            self.collectionViewLayout.invalidateLayout()
+        })
+    }
+
 //    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
 //        // move your data order
 //    }
