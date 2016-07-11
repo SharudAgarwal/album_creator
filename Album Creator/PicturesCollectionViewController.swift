@@ -57,52 +57,26 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         picker.dismissViewControllerAnimated(true, completion:nil)
         
         let referenceUrl = info[UIImagePickerControllerReferenceURL] as! NSURL
-//        print(hash?.toHexString())
         let assets = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil)
         print("The number of assets fetched from Photos: \(assets.count)")
         let asset = assets.firstObject
         asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, editingInfo) in
             let imageFile = contentEditingInput?.fullSizeImageURL
-//            let filePath = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(NSDate.timeIntervalSinceReferenceDate() * 1000))/\(referenceUrl.lastPathComponent!)"
-//            let imageID = stringUpToChar((asset?.localIdentifier)!, delimitingChar: "/")
             let imageID = self.databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
-/*            let imageFileName = referenceUrl.lastPathComponent
-            var imageData: NSData?
-            if (((imageFileName?.lowercaseString.containsString("jpg") != nil) || (imageFileName?.lowercaseString.containsString("jpeg")) != nil)) {
-                imageData = UIImageJPEGRepresentation(info[UIImagePickerControllerOriginalImage] as! UIImage, 1.0)
-            } else if (imageFileName?.lowercaseString.containsString("png") != nil) {
-                imageData = UIImagePNGRepresentation(info[UIImagePickerControllerOriginalImage] as! UIImage)
-            } else {
-                fatalError("\(#function):: ERROR: Trying to hash an image of type \(imageFileName!)")
-            }
-//            let imageHash = imageData?.sha256()?.toHexString()
-*/
             let filePath = "pictures/\(self.albumID!)/\(imageID)"
-//            let metadata = FIRStorageMetadata()
-//            metadata.contentType = "image/jpeg"
             let filepathRef = self.storageRef.child(filePath)
-//            filepathRef.putFile(imageFile!)
             filepathRef.putFile(imageFile!, metadata: nil, completion: { (metadata, error) in
                 if let error = error {
                     print("Error uploading: \(error.description)")
                     return
                 } else {
                     print("Upload Succeeded!")
-//                    let downloadURL = metadata!.downloadURL()
-//                    self.updateDatabaseWithImage(imageID, url: "\(Constants.FirebaseFields.storageURL)/pictures/\(self.albumID!)/\(imageID)")
-//                    self.updateDatabaseWithImage(imageID, url: downloadURL!.absoluteString)
-//                    updateDatabaseWithImage(imageID, databaseRef: FIRDatabaseReference, albumID: String)
                     updateDatabaseWithName("pictures", name: imageID, databaseRef: self.databaseRef, id: self.albumID!)
                     if (!self.albumThumbnailSet) {
                         let post = [Constants.AlbumFields.thumbnailURL:"pictures/\(self.albumID!)/\(imageID)"]
                         updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.albumID!)
                         self.albumThumbnailSet = true
                     }
-//                    post = [Constants.AlbumFields.name: name, Constants.UserFields.id: id]
-//                    updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.albumID!)
-
-//                    childUpdates = ["\(root)/\(id)": post]
-//                    databaseRef.updateChildValues(childUpdates)
                 }
             })
 
@@ -181,26 +155,6 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         } else {
             fatalError("\(#function):: How did I get here??")
         }
-/*
-        cell.pictureImageView.kf_showIndicatorWhenLoading = true
-        if let picturePath = pictureJSON[Constants.PictureFields.pathToImage].string {
-            print("DEBUG: picturePath = \(picturePath)")
-            
-            let imageRef = storageRef.child(picturePath)
-            imageRef.downloadURLWithCompletion { (URL, error) -> Void in
-                
-                if let error = error {
-                    print("\(#function):: error = \(error.localizedDescription)")
-                } else {
-                    print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
-                    cell.pictureImageView.kf_setImageWithURL(URL!, placeholderImage: nil)
-                }
-            }
-            
-        } else {
-            print("\(#function):: picturePath does not exist for current snapshot")
-        }
-*/
         return cell
     }
     

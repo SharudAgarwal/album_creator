@@ -50,8 +50,9 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .Alert)
         let addAction = UIAlertAction(title: "Save", style: .Default) { _ in
             if let albumName = alertController.textFields![0].text {
-                let albumID = self.createAlbumDatabaseID(albumName)
+                let albumID = self.createAlbumDatabaseID()
                 updateDatabaseUserWithAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
+                updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
                 self.performSegueWithIdentifier(self.picturesSegue, sender: albumID)
             } else {
                 // user did not fill field
@@ -68,9 +69,8 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    func createAlbumDatabaseID(albumName: String) -> String {
+    func createAlbumDatabaseID() -> String {
         let albumID = self.databaseRef.child("albums").childByAutoId().key
-        updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
         return albumID
     }
 
