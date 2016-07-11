@@ -8,10 +8,30 @@
 
 import Foundation
 
-struct User {
-    static var name: String?
-    static var profilePic: NSURL?
-    static var numOfAlbums: Int = 0
-    static var albums = [String]()
+class User {
+    var name: String
+    var id: String
+    var profilePic: NSURL?
+    var numOfAlbums: Int = 0
+    var albums = [String]()
+    
+    init(username: String, id: String) {
+        self.name = username
+        self.id = id
+    }
+    
+    init(username: String, id: String, profilePic: NSURL?) {
+        self.name = username
+        self.id = id
+        self.profilePic = profilePic
+    }
+    
+    init(username: String, id: String, profilePic: NSURL?, albumName: String) {
+        self.name = username
+        self.id = id
+        self.profilePic = profilePic
+        self.albums.append(albumName)
+        self.numOfAlbums += 1
+    }
     
 }

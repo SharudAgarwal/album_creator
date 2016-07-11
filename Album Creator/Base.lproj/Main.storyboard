@@ -29,11 +29,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="200" height="245"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X0J-oZ-PV1">
-                                            <rect key="frame" x="8" y="8" width="184" height="221"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X0J-oZ-PV1">
+                                            <rect key="frame" x="8" y="8" width="184" height="200"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bhc-5e-GiT">
-                                            <rect key="frame" x="8" y="237" width="184" height="0.0"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bhc-5e-GiT">
+                                            <rect key="frame" x="8" y="216" width="184" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -42,14 +42,26 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
+                                    <constraint firstItem="Bhc-5e-GiT" firstAttribute="top" secondItem="X0J-oZ-PV1" secondAttribute="bottom" constant="8" id="Hes-dY-iv3"/>
+                                    <constraint firstItem="Bhc-5e-GiT" firstAttribute="top" secondItem="X0J-oZ-PV1" secondAttribute="bottom" id="IbL-db-CMs"/>
                                     <constraint firstAttribute="leadingMargin" secondItem="Bhc-5e-GiT" secondAttribute="leading" id="InH-K1-OBg"/>
                                     <constraint firstItem="Bhc-5e-GiT" firstAttribute="top" secondItem="X0J-oZ-PV1" secondAttribute="bottom" constant="8" symbolic="YES" id="RRS-EC-DXg"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="Bhc-5e-GiT" secondAttribute="bottom" id="aeG-mF-oZa"/>
                                     <constraint firstAttribute="leadingMargin" secondItem="X0J-oZ-PV1" secondAttribute="leading" id="bv3-In-PaO"/>
                                     <constraint firstAttribute="topMargin" secondItem="X0J-oZ-PV1" secondAttribute="top" id="g0u-CP-DaX"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="Bhc-5e-GiT" secondAttribute="trailing" id="hRy-qb-5UK"/>
+                                    <constraint firstAttribute="topMargin" secondItem="Bhc-5e-GiT" secondAttribute="top" id="hZt-pT-3Qd"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="X0J-oZ-PV1" secondAttribute="trailing" id="ouz-1P-gvu"/>
+                                    <constraint firstItem="Bhc-5e-GiT" firstAttribute="top" secondItem="X0J-oZ-PV1" secondAttribute="top" id="vjt-kr-jH9"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="IbL-db-CMs"/>
+                                        <exclude reference="RRS-EC-DXg"/>
+                                        <exclude reference="hZt-pT-3Qd"/>
+                                        <exclude reference="vjt-kr-jH9"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="AlbumImageView" destination="X0J-oZ-PV1" id="jKy-3a-37k"/>
                                     <outlet property="AlbumNameLabel" destination="Bhc-5e-GiT" id="2oi-le-d97"/>
@@ -61,7 +73,13 @@
                             <outlet property="delegate" destination="DgK-DF-3Qw" id="GBD-ZX-VJE"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Albums" id="R7U-JB-oI8"/>
+                    <navigationItem key="navigationItem" title="Albums" id="R7U-JB-oI8">
+                        <barButtonItem key="rightBarButtonItem" title="Add New Album" id="xDq-ER-hRj">
+                            <connections>
+                                <action selector="createNewAlbum:" destination="DgK-DF-3Qw" id="jkc-4A-6Nq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="t8r-up-gRK" kind="show" identifier="toPicturesCollectionViewController" id="FFB-wT-Oqc"/>
                     </connections>
@@ -73,7 +91,6 @@
         <!--SignInViewController-->
         <scene sceneID="759-7f-7kn">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zvw-O7-vTa" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController title="SignInViewController" id="jsZ-9h-chH" customClass="SignInViewController" customModule="Album_Creator" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wpF-A7-Vxc"/>
@@ -100,6 +117,9 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="5tt-JA-2lR">
+                                <rect key="frame" x="357" y="357" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -142,6 +162,7 @@
                         <segue destination="erH-4X-w0R" kind="presentation" identifier="toAlbumsCollectionViewController" id="lTa-Ig-5c0"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zvw-O7-vTa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2565" y="804"/>
         </scene>

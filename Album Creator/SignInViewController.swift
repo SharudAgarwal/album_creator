@@ -13,10 +13,13 @@ import FirebaseAuth
 
 import FBSDKLoginKit
 
+import PKHUD
+
 class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var FBLoginButtonView: UIView!
     
+    private var databaseRef: FIRDatabaseReference!
     private let albumsSegue = "toAlbumsCollectionViewController"
     private var userLoggedIn = false
     
@@ -24,13 +27,14 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        databaseRef = FIRDatabase.database().reference()
         
         if (FBSDKAccessToken.currentAccessToken() != nil) {
-            firebaseLogin()
-            userLoggedIn = true
             print("\(#function):: Already logged in")
+            firebaseLogin()
         }
         else {
+            userLoggedIn = false
             let loginView : FBSDKLoginButton = FBSDKLoginButton()
             
             
@@ -46,11 +50,12 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
         // Do any additional setup after loading the view.
     }
     
-    override func viewDidAppear(animated: Bool) {
-        if (userLoggedIn) {
-            performSegueWithIdentifier(albumsSegue, sender: nil)
-        }
-    }
+//    override func viewDidAppear(animated: Bool) {
+//        if (userLoggedIn) {
+//            print("\(#function):: How did this happen?!")
+//            performSegueWithIdentifier(albumsSegue, sender: nil)
+//        }
+//    }
 
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         print("User clicked login")
@@ -68,25 +73,50 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             // If you ask for multiple permissions at once, you
             // should check if specific permissions missing
             if (result.grantedPermissions.contains("user_friends") && result.grantedPermissions.contains("email") && result.grantedPermissions.contains("public_profile")) {
-                userLoggedIn = true
                 firebaseLogin()
-                performSegueWithIdentifier(albumsSegue, sender: nil)
+                
             }
         }
     }
     
     func firebaseLogin() {
+        userLoggedIn = true
+        showProgressBar()
         let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
         FIRAuth.auth()?.signInWithCredential(credential, completion: { (user, error) in
             if let error = error {
                 print("\(#function):: error = \(error)")
             } else {
-                User.name = user?.displayName
-                User.profilePic = user?.photoURL
-                print("\(#function):: User now initialized")
-                //FIXME: Need to make this blocking. Put a loading progress circle and then segue from here
+                let currentUser = User(username: user!.displayName!, id: user!.uid)
+//                currentUser.name = user?.providerID //user?.displayName
+                currentUser.profilePic = user?.photoURL
+                print("\(#function):: User now initialized with name \(currentUser.name) & id = \(currentUser.id)")
+                updateDatabaseWithName("users", name: currentUser.name, databaseRef: self.databaseRef, id: currentUser.id)
+                self.performSegueWithIdentifier(self.albumsSegue, sender: currentUser)
             }
         })
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        print("\(#function)")
+
+        if (segue.identifier! == albumsSegue) {
+            let nav = segue.destinationViewController as! UINavigationController
+            if let destinationVC = nav.topViewController as? AlbumsCollectionViewController {
+                print("\(#function):: sender = \(sender)")
+                destinationVC.currentUser = sender as? User
+            }
+            HUD.hide()
+        } else {
+            print("\(#function):: Segue identifier didn't match. Identifier = \(segue.identifier)")
+        }
+    }
+    
+    func showProgressBar() {
+        PKHUD.sharedHUD.dimsBackground = true
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+        HUD.show(.Progress)
     }
     
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {

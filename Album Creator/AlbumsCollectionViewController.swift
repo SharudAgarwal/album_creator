@@ -12,49 +12,67 @@ import FirebaseDatabase
 
 import SwiftyJSON
 
-private let reuseIdentifier = "albumCell"
+import Photos
 
-class AlbumsCollectionViewController: UICollectionViewController {
+class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
     var albums: [FIRDataSnapshot]! = []
+    var tappedAlbumID: String?
+    var currentUser: User?
     
     private var albumsRefHandle: FIRDatabaseHandle!
     private var usersRefHandle: FIRDatabaseHandle!
-//    private let userID: String = "user1"
+    private var storageRef: FIRStorageReference!
     private var usersAlbumNamesArr = [AnyObject?]()
     private let picturesSegue = "toPicturesCollectionViewController"
+    private let createNewAlbumSegue = "toCreateNewAlbumViewController"
+    private let reuseIdentifier = "albumCell"
     
-    var tappedAlbumID: String?
+    //FIXME: Add "add album" buttom
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\(#function):: Albums Collection View did load")
         databaseRef = FIRDatabase.database().reference()
-        
+        storageRef = FIRStorage.storage().reference()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+//    override func viewDidAppear(animated: Bool) {
+//    }
+    
+    @IBAction func createNewAlbum(sender: UIBarButtonItem) {
+        let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .Alert)
+        let addAction = UIAlertAction(title: "Save", style: .Default) { _ in
+            if let albumName = alertController.textFields![0].text {
+                let albumID = self.createAlbumDatabaseID(albumName)
+                updateDatabaseUserWithAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
+                self.performSegueWithIdentifier(self.picturesSegue, sender: albumID)
+            } else {
+                // user did not fill field
+            }
+        }
+        alertController.addTextFieldWithConfigurationHandler { (textField) in
+            textField.placeholder = ""
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+        
+        alertController.addAction(addAction)
+        alertController.addAction(cancelAction)
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    
+    func createAlbumDatabaseID(albumName: String) -> String {
+        let albumID = self.databaseRef.child("albums").childByAutoId().key
+        updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
+        return albumID
     }
-    */
-
-    // MARK: UICollectionViewDataSource
 
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -70,11 +88,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
         // unpack album data from Firebase DataSnapshot
         let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
-        cell.AlbumNameLabel.text = albumJSON[Constants.AlbumFields.name].string
-        if let albumThumbnailURL = albumJSON[Constants.AlbumFields.thumbnailURL].string {
-            cell.AlbumImageView.image = downloadImage(albumThumbnailURL)
-        } else {
-            // Todo: Need to implement nil image object class from github
+        cell.albumNameLabel.text = albumJSON[Constants.AlbumFields.name].string
+        if (albumJSON[Constants.AlbumFields.thumbnailURL].string != nil) {
+            setCellImageView(cell, snapshotJSON: albumJSON, storageRef: storageRef)
         }
         return cell
     }
@@ -86,9 +102,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == picturesSegue {
+        if sender != nil && segue.identifier == picturesSegue {
+            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
+                pictureVC.albumID = sender as? String
+                pictureVC.albumThumbnailSet = false
+            }
+        }
+        else if segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
                 pictureVC.albumID = self.tappedAlbumID
+                pictureVC.albumThumbnailSet = true
             }
         }
     }
@@ -103,7 +126,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     override func viewWillDisappear(animated: Bool) {
         print(#file + "::" + #function)
-        self.databaseRef.child("users/\(User.name)/albums").removeObserverWithHandle(usersRefHandle)
+        self.databaseRef.child("users/\(currentUser!.id)/albums").removeObserverWithHandle(usersRefHandle)
     }
     
     /// Updates albums table view by refetching each image url and album name.
@@ -111,8 +134,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         self.albums.removeAll()
         self.collectionView?.reloadData()
         // Listen for new Albums from Firebase database
-        print("\(#function):: username = \(User.name)")
-        usersRefHandle = self.databaseRef.child("users/\(User.name)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        print("\(#function):: username = \(currentUser!.id)")
+        usersRefHandle = self.databaseRef.child("users/\(currentUser!.id)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
             // get list of albums the user belongs to from the snapshot
             print("\(#function):: This user is a member of the following albums: \(snapshot.key)")
             let albumUserIsIn = snapshot.key

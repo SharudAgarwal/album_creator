@@ -29,6 +29,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     private var picturesRefHandle: FIRDatabaseHandle!
     
     var albumID: String?
+    var albumThumbnailSet = false
     
     @IBAction func addPicturesToAlbum(sender: UIBarButtonItem) {
         let picker = UIImagePickerController()
@@ -90,7 +91,18 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 //                    let downloadURL = metadata!.downloadURL()
 //                    self.updateDatabaseWithImage(imageID, url: "\(Constants.FirebaseFields.storageURL)/pictures/\(self.albumID!)/\(imageID)")
 //                    self.updateDatabaseWithImage(imageID, url: downloadURL!.absoluteString)
-                    self.updateDatabaseWithImage(imageID)
+//                    updateDatabaseWithImage(imageID, databaseRef: FIRDatabaseReference, albumID: String)
+                    updateDatabaseWithName("pictures", name: imageID, databaseRef: self.databaseRef, id: self.albumID!)
+                    if (!self.albumThumbnailSet) {
+                        let post = [Constants.AlbumFields.thumbnailURL:"pictures/\(self.albumID!)/\(imageID)"]
+                        updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.albumID!)
+                        self.albumThumbnailSet = true
+                    }
+//                    post = [Constants.AlbumFields.name: name, Constants.UserFields.id: id]
+//                    updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.albumID!)
+
+//                    childUpdates = ["\(root)/\(id)": post]
+//                    databaseRef.updateChildValues(childUpdates)
                 }
             })
 
@@ -163,7 +175,13 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
-        
+        print("\(#function):: pictures.count = \(pictures.count) & albumThumbnailSet = \(self.albumThumbnailSet)")
+        if (albumThumbnailSet) {
+            setCellImageView(cell, snapshotJSON: pictureJSON, storageRef: storageRef)
+        } else {
+            fatalError("\(#function):: How did I get here??")
+        }
+/*
         cell.pictureImageView.kf_showIndicatorWhenLoading = true
         if let picturePath = pictureJSON[Constants.PictureFields.pathToImage].string {
             print("DEBUG: picturePath = \(picturePath)")
@@ -182,7 +200,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         } else {
             print("\(#function):: picturePath does not exist for current snapshot")
         }
-        
+*/
         return cell
     }
     
@@ -196,13 +214,6 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 //        // move your data order
 //    }
     
-    func updateDatabaseWithImage(name: String) {
-//        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
-        let post = [Constants.PictureFields.name: name,
-                    Constants.PictureFields.pathToImage: "pictures/\(self.albumID!)/\(name)"]
-        let childUpdates = ["pictures/\(self.albumID!)/\(name)": post]
-        databaseRef.updateChildValues(childUpdates)
-    }
 
     // MARK: UICollectionViewDelegate
 

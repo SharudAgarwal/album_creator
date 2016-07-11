@@ -10,6 +10,7 @@ import UIKit
 
 class AlbumsCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var AlbumNameLabel: UILabel!
-    @IBOutlet weak var AlbumImageView: UIImageView!
+    @IBOutlet weak var albumNameLabel: UILabel!
+    @IBOutlet weak var albumImageView: UIImageView!
+    
 }

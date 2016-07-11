@@ -19,6 +19,7 @@ struct Constants {
     
     struct UserFields {
         static let name = "username"
+        static let id = "uid"
         static let profilePic = "profilePicture"
         static let numOfAlbums = "numOfAlbums"
         static let albums = "albums"
@@ -35,7 +36,13 @@ struct Constants {
     }
     
     struct FirebaseFields {
-        static let urlPrefix = "gs://"
+        static let urlPrefix = "pictures/"
         static let storageURL = "gs://album-creator-bff89.appspot.com"
+    }
+    
+    struct FIRDatabaseRoots {
+        static let users = "users"
+        static let albums = "albums"
+        static let pictures = "pictures"
     }
 }
