@@ -14,7 +14,7 @@ import SwiftyJSON
 
 import Photos
 
-class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
 
     //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
@@ -29,6 +29,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     private let picturesSegue = "toPicturesCollectionViewController"
     private let createNewAlbumSegue = "toCreateNewAlbumViewController"
     private let reuseIdentifier = "albumCell"
+    private let numberOfItemsPerRow = 3
     
     //FIXME: Add "add album" buttom
     
@@ -147,6 +148,29 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
                 self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)])
             })
             //            albumAddedToUser(snapshot)
+        })
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
+        let totalSpace = flowLayout.sectionInset.left + flowLayout.sectionInset.right + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsPerRow - 1))
+        let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(numberOfItemsPerRow))
+        return CGSize(width: size, height: size)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        // Code here will execute before the rotation begins.
+        // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
+        coordinator.animateAlongsideTransition({ (nil) -> Void in
+            // Place code here to perform animations during the rotation.
+            // You can pass nil for this closure if not necessary.
+            },
+                                               completion: { (context) -> Void in
+                                                // Code here will execute after the rotation has finished.
+                                                // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
+                                                self.collectionViewLayout.invalidateLayout()
         })
     }
     

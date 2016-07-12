@@ -40,6 +40,9 @@
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" button="YES" staticText="YES"/>
                                             </accessibility>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="Yv6-IA-GwA"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -48,26 +51,14 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="Uk5-Pn-Hhr" firstAttribute="top" secondItem="7K2-3d-CNv" secondAttribute="bottom" constant="8" symbolic="YES" id="1gz-J7-eCX"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="Uk5-Pn-Hhr" secondAttribute="bottom" id="BVs-Lz-dBO"/>
                                     <constraint firstAttribute="topMargin" secondItem="7K2-3d-CNv" secondAttribute="top" id="JOQ-1w-dNd"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="Uk5-Pn-Hhr" secondAttribute="trailing" id="YFz-u7-FKL"/>
-                                    <constraint firstItem="Uk5-Pn-Hhr" firstAttribute="top" secondItem="7K2-3d-CNv" secondAttribute="bottom" id="dkx-SO-vkU"/>
                                     <constraint firstAttribute="leadingMargin" secondItem="Uk5-Pn-Hhr" secondAttribute="leading" id="fsz-mI-krY"/>
-                                    <constraint firstAttribute="topMargin" secondItem="Uk5-Pn-Hhr" secondAttribute="top" id="gzZ-ho-ymT"/>
                                     <constraint firstAttribute="leadingMargin" secondItem="7K2-3d-CNv" secondAttribute="leading" id="k5X-nZ-Cnk"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="7K2-3d-CNv" secondAttribute="trailing" id="kbV-b5-tKr"/>
-                                    <constraint firstItem="Uk5-Pn-Hhr" firstAttribute="top" secondItem="7K2-3d-CNv" secondAttribute="top" id="lss-lD-b8m"/>
                                     <constraint firstItem="Uk5-Pn-Hhr" firstAttribute="top" secondItem="7K2-3d-CNv" secondAttribute="bottom" constant="8" id="vN7-KO-2M0"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="dkx-SO-vkU"/>
-                                        <exclude reference="1gz-J7-eCX"/>
-                                        <exclude reference="gzZ-ho-ymT"/>
-                                        <exclude reference="lss-lD-b8m"/>
-                                    </mask>
-                                </variation>
                                 <connections>
                                     <outlet property="AlbumImageView" destination="7K2-3d-CNv" id="ovx-1E-vsI"/>
                                     <outlet property="AlbumNameLabel" destination="Uk5-Pn-Hhr" id="mkh-lz-5j7"/>
