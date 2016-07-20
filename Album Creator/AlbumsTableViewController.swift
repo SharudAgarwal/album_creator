@@ -71,7 +71,7 @@ class AlbumsTableViewController: UITableViewController {
         self.tappedAlbumID = albumSnapshot.key
         performSegueWithIdentifier(picturesSegue, sender: nil)
     }
-    
+/*
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
@@ -79,7 +79,7 @@ class AlbumsTableViewController: UITableViewController {
             }
         }
     }
-    
+*/
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

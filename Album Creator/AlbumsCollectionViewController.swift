@@ -52,9 +52,10 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let addAction = UIAlertAction(title: "Save", style: .Default) { _ in
             if let albumName = alertController.textFields![0].text {
                 let albumID = self.createAlbumDatabaseID()
-                updateDatabaseUserWithAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
+                updateDatabaseUserAndAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
                 updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
-                self.performSegueWithIdentifier(self.picturesSegue, sender: albumID)
+                let album = Album(albumName: albumName, id: albumID)
+                self.performSegueWithIdentifier(self.picturesSegue, sender: album)
             } else {
                 // user did not fill field
             }
@@ -98,23 +99,30 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let albumSnapshot = self.albums[indexPath.row]
-        self.tappedAlbumID = albumSnapshot.key
-        performSegueWithIdentifier(picturesSegue, sender: nil)
+//        self.tappedAlbumID = albumSnapshot.key
+        let albumJSON = JSON(albumSnapshot.value!)
+        let chosenAlbum = Album(albumName: albumJSON[Constants.AlbumFields.name].string!, id: albumSnapshot.key, thumbnailURL: albumJSON[Constants.AlbumFields.thumbnailURL].string!, username: currentUser!.id)
+/*        print("albumSnapshot value = \(albumSnapshot.value)")
+        for child in albumSnapshot.children {
+            print("albumSnapshot children are: \(child)")
+        }
+ */
+        performSegueWithIdentifier(picturesSegue, sender: chosenAlbum)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if sender != nil && segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
-                pictureVC.albumID = sender as? String
-                pictureVC.albumThumbnailSet = false
+                pictureVC.album = sender as? Album
+//                pictureVC.albumThumbnailSet = false
             }
         }
-        else if segue.identifier == picturesSegue {
+/*        else if segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
-                pictureVC.albumID = self.tappedAlbumID
-                pictureVC.albumThumbnailSet = true
+//                pictureVC.album = self.tappedAlbumID
+//                pictureVC.albumThumbnailSet = true
             }
-        }
+        } */
     }
     
     // Will update the table by calling updateTable()

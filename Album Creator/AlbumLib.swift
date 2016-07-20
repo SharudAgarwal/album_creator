@@ -21,14 +21,14 @@ func updateDatabaseWithName(root: String, name: String, databaseRef: FIRDatabase
     if root == "pictures" {
         newDataRef = databaseRef.child("\(root)/\(id)/\(name)")
         post = [Constants.PictureFields.name: name,
-                    Constants.PictureFields.pathToImage: "\(root)/\(id)/\(name)"]
+                Constants.PictureFields.pathToImage: "\(root)/\(id)/\(name)"]
 //        childUpdates = ["\(root)/\(id)/\(name)": post]
     } else if root == "albums" {
         post = [Constants.AlbumFields.name: name]
 //        childUpdates = ["\(root)/\(id)": post]
     } else if root == "users" {
         post = [Constants.UserFields.name: name,
-                    Constants.UserFields.id: id]
+                Constants.UserFields.id: id]
 //        childUpdates = ["\(root)/\(id)": post]
     }
     
@@ -43,7 +43,7 @@ func updateDatabaseWithPost(root: String, post: [String:String], databaseRef: FI
     newDataRef.updateChildValues(post)
 }
 
-func updateDatabaseUserWithAlbum(userID userID: String, albumID: String, databaseRef: FIRDatabaseReference) {
+func updateDatabaseUserAndAlbum(userID userID: String, albumID: String, databaseRef: FIRDatabaseReference) {
     //        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
     // add album to user's list of albums
     var root = Constants.FIRDatabaseRoots.users

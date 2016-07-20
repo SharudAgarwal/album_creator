@@ -20,6 +20,8 @@ import Kingfisher
 //import CryptoSwift
 
 class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
+    
+    @IBOutlet weak var picturesViewTitleBar: UINavigationItem!
 
     private var databaseRef: FIRDatabaseReference!
     private var storageRef: FIRStorageReference!
@@ -29,8 +31,9 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     
     private var picturesRefHandle: FIRDatabaseHandle!
     
-    var albumID: String?
-    var albumThumbnailSet = false
+    var album: Album?
+//    var albumID: String?
+//    var albumThumbnailSet = false
     
     @IBAction func addPicturesToAlbum(sender: UIBarButtonItem) {
         let picker = UIImagePickerController()
@@ -63,8 +66,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let asset = assets.firstObject
         asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, editingInfo) in
             let imageFile = contentEditingInput?.fullSizeImageURL
-            let imageID = self.databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
-            let filePath = "pictures/\(self.albumID!)/\(imageID)"
+            let imageID = self.databaseRef.child("pictures/\(self.album!.id)").childByAutoId().key
+            let filePath = "pictures/\(self.album!.id)/\(imageID)"
             let filepathRef = self.storageRef.child(filePath)
             filepathRef.putFile(imageFile!, metadata: nil, completion: { (metadata, error) in
                 if let error = error {
@@ -72,11 +75,11 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
                     return
                 } else {
                     print("Upload Succeeded!")
-                    updateDatabaseWithName("pictures", name: imageID, databaseRef: self.databaseRef, id: self.albumID!)
-                    if (!self.albumThumbnailSet) {
-                        let post = [Constants.AlbumFields.thumbnailURL:"pictures/\(self.albumID!)/\(imageID)"]
-                        updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.albumID!)
-                        self.albumThumbnailSet = true
+                    updateDatabaseWithName("pictures", name: imageID, databaseRef: self.databaseRef, id: self.album!.id)
+                    if (self.album!.thumbnailURL == nil) {
+                        let post = [Constants.AlbumFields.thumbnailURL:"pictures/\(self.album!.id)/\(imageID)"]
+                        updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.album!.id)
+                        self.album!.setThumbnail("pictures/\(self.album!.id)/\(imageID)")
                     }
                 }
             })
@@ -99,11 +102,12 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     
     override func viewWillDisappear(animated: Bool) {
         print(#file + "::" + #function)
-        self.databaseRef.child("pictures/\(albumID!)").removeObserverWithHandle(picturesRefHandle)
+        self.databaseRef.child("pictures/\(album!.id)").removeObserverWithHandle(picturesRefHandle)
     }
     
     override func viewWillAppear(animated: Bool) {
         print(#file + "::" + #function)
+        picturesViewTitleBar.title = self.album!.name
         updatePicturesCollection()
         print("End of updatePicturesCollection")
     }
@@ -113,7 +117,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         self.collectionView?.reloadData()
         
         // Listen for new Pictures from Firebase database
-        picturesRefHandle = self.databaseRef.child("pictures/\(albumID!)").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        picturesRefHandle = self.databaseRef.child("pictures/\(album!.id)").observeEventType(.ChildAdded, withBlock: { (snapshot) in
             print(snapshot.description)
             self.pictures.append(snapshot)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.pictures.count-1, inSection: 0)])
@@ -150,8 +154,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
-        print("\(#function):: pictures.count = \(pictures.count) & albumThumbnailSet = \(self.albumThumbnailSet)")
-        if (albumThumbnailSet) {
+        print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album!.thumbnailURL)")
+        if (album!.thumbnailURL != nil) {
             setCellImageView(cell, snapshotJSON: pictureJSON, storageRef: storageRef)
         } else {
             fatalError("\(#function):: How did I get here??")

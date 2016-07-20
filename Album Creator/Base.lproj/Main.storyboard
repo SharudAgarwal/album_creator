@@ -78,7 +78,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="t8r-up-gRK" kind="show" identifier="toPicturesCollectionViewController" id="FFB-wT-Oqc"/>
+                        <segue destination="t8r-up-gRK" kind="show" identifier="toPicturesCollectionViewController" id="lXN-Sx-gwA"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1r3-ke-i9c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -207,6 +207,7 @@
                             <outlet property="delegate" destination="t8r-up-gRK" id="h8F-2a-r24"/>
                         </connections>
                     </collectionView>
+                    <tabBarItem key="tabBarItem" title="Item" id="l10-Al-ggH"/>
                     <navigationItem key="navigationItem" title="Photos" id="Scd-NK-dbB">
                         <barButtonItem key="rightBarButtonItem" title="Add Pictures" id="Pya-Fg-Ngl">
                             <connections>
@@ -214,10 +215,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="picturesViewTitleBar" destination="Scd-NK-dbB" id="DhP-qh-1mk"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj0-9f-wmo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5668" y="191"/>
+            <point key="canvasLocation" x="5564" y="191"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JbD-H7-1wo">
