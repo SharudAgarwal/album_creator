@@ -174,11 +174,11 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         coordinator.animateAlongsideTransition({ (nil) -> Void in
             // Place code here to perform animations during the rotation.
             // You can pass nil for this closure if not necessary.
-            },
-                                               completion: { (context) -> Void in
-                                                // Code here will execute after the rotation has finished.
-                                                // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
-                                                self.collectionViewLayout.invalidateLayout()
+        },
+        completion: { (context) -> Void in
+            // Code here will execute after the rotation has finished.
+            // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
+            self.collectionViewLayout.invalidateLayout()
         })
     }
     
