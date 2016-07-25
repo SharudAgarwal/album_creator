@@ -25,7 +25,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     private var albumsRefHandle: FIRDatabaseHandle!
     private var usersRefHandle: FIRDatabaseHandle!
     private var storageRef: FIRStorageReference!
-    private var usersAlbumNamesArr = [AnyObject?]()
+    private var userAlbumNames = [String]()
     private let picturesSegue = "toPicturesCollectionViewController"
     private let createNewAlbumSegue = "toCreateNewAlbumViewController"
     private let reuseIdentifier = "albumCell"
@@ -51,11 +51,18 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .Alert)
         let addAction = UIAlertAction(title: "Save", style: .Default) { _ in
             if let albumName = alertController.textFields![0].text {
-                let albumID = self.createAlbumDatabaseID()
-                updateDatabaseUserAndAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
-                updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
-                let album = Album(albumName: albumName, id: albumID)
-                self.performSegueWithIdentifier(self.picturesSegue, sender: album)
+                if (self.albumNameExists(albumName)) {
+                    let invalidNameAlertController = UIAlertController(title: "Invalid Album Name", message: "You already have an album titled \(albumName), please choose a unique name", preferredStyle: .Alert)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+                    invalidNameAlertController.addAction(cancelAction)
+                    self.presentViewController(invalidNameAlertController, animated: true, completion: nil)
+                } else {
+                    let albumID = self.createAlbumDatabaseID()
+                    updateDatabaseUserAndAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
+                    updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
+                    let album = Album(albumName: albumName, id: albumID)
+                    self.performSegueWithIdentifier(self.picturesSegue, sender: album)
+                }
             } else {
                 // user did not fill field
             }
@@ -69,6 +76,10 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         alertController.addAction(addAction)
         alertController.addAction(cancelAction)
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+
+    func albumNameExists(albumName: String) -> Bool {
+        return userAlbumNames.contains(albumName)
     }
     
     func createAlbumDatabaseID() -> String {
@@ -90,7 +101,9 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         // unpack album data from Firebase DataSnapshot
         let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
-        cell.albumNameLabel.text = albumJSON[Constants.AlbumFields.name].string
+        let albumName = albumJSON[Constants.AlbumFields.name].string
+        self.userAlbumNames.append(albumName!)
+        cell.albumNameLabel.text = albumName
         if (albumJSON[Constants.AlbumFields.thumbnailURL].string != nil) {
             setCellImageView(cell, snapshotJSON: albumJSON, storageRef: storageRef)
         }
