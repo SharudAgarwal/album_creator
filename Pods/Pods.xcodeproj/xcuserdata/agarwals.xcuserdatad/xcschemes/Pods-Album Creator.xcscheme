@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D01824096AD1AC59B21C3A2461DA4EF5"
+               BlueprintIdentifier = "4A2ACA987BF3E25F56964952B3B3721C"
                BuildableName = "Pods_Album_Creator.framework"
                BlueprintName = "Pods-Album Creator"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D01824096AD1AC59B21C3A2461DA4EF5"
+            BlueprintIdentifier = "4A2ACA987BF3E25F56964952B3B3721C"
             BuildableName = "Pods_Album_Creator.framework"
             BlueprintName = "Pods-Album Creator"
             ReferencedContainer = "container:Pods.xcodeproj">

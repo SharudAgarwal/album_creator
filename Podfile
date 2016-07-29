@@ -16,7 +16,7 @@ target 'Album Creator' do
   pod 'FBSDKLoginKit'
 
   pod 'SwiftyJSON'#, :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
-
+  pod 'DZNEmptyDataSet'
   pod 'Kingfisher', '~> 2.4.x'
 
   pod "PKHUD"

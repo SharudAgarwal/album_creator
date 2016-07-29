@@ -14,12 +14,12 @@ import FirebaseDatabase
 import FirebaseStorage
 
 import SwiftyJSON
-
+import DZNEmptyDataSet
 import Kingfisher
 
 //import CryptoSwift
 
-class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
+class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     
     @IBOutlet weak var picturesViewTitleBar: UINavigationItem!
 
@@ -91,6 +91,9 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         super.viewDidLoad()
         databaseRef = FIRDatabase.database().reference()
         storageRef = FIRStorage.storage().reference()
+        collectionView!.emptyDataSetSource = self
+        collectionView!.emptyDataSetDelegate = self
+//        self.collectionView.footer
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -155,7 +158,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
         print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL)")
-        if (album.thumbnailURL != nil) {
+        if (pictureJSON[Constants.PictureFields.pathToImage].string != nil) {
             setCellImageView(cell, snapshotJSON: pictureJSON, storageRef: storageRef)
         } else {
             fatalError("\(#function):: How did I get here??")
@@ -191,7 +194,19 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
             self.collectionViewLayout.invalidateLayout()
         })
     }
+    
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = album.name
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
 
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "You currently have no photos in this album."
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+    
 //    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
 //        // move your data order
 //    }

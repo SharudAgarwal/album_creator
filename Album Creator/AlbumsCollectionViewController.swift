@@ -11,10 +11,10 @@ import Firebase
 import FirebaseDatabase
 
 import SwiftyJSON
-
+import DZNEmptyDataSet
 import Photos
 
-class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
+class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
 
     //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
@@ -38,6 +38,8 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         print("\(#function):: Albums Collection View did load")
         databaseRef = FIRDatabase.database().reference()
         storageRef = FIRStorage.storage().reference()
+        collectionView!.emptyDataSetSource = self
+        collectionView!.emptyDataSetDelegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -107,6 +109,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         if (albumJSON[Constants.AlbumFields.thumbnailURL].string != nil) {
             setCellImageView(cell, snapshotJSON: albumJSON, storageRef: storageRef)
         }
+        //FIXME: Probably need to set here what image to display when album is empty
         return cell
     }
 
@@ -114,7 +117,8 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let albumSnapshot = self.albums[indexPath.row]
 //        self.tappedAlbumID = albumSnapshot.key
         let albumJSON = JSON(albumSnapshot.value!)
-        let chosenAlbum = Album(albumName: albumJSON[Constants.AlbumFields.name].string!, id: albumSnapshot.key, thumbnailURL: albumJSON[Constants.AlbumFields.thumbnailURL].string!, username: currentUser!.id)
+        let thumbnail = albumJSON[Constants.AlbumFields.thumbnailURL].string
+        let chosenAlbum = Album(albumName: albumJSON[Constants.AlbumFields.name].string!, id: albumSnapshot.key, thumbnailURL: thumbnail, username: currentUser!.id)
 /*        print("albumSnapshot value = \(albumSnapshot.value)")
         for child in albumSnapshot.children {
             print("albumSnapshot children are: \(child)")
@@ -193,6 +197,18 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
             // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
             self.collectionViewLayout.invalidateLayout()
         })
+    }
+    
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "Welcome!"
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+    
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "You currently have no albums."
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        return NSAttributedString(string: str, attributes: attrs)
     }
     
     // MARK: UICollectionViewDelegate
