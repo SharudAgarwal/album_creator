@@ -114,18 +114,20 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="5tt-JA-2lR">
-                                <rect key="frame" x="357" y="357" width="20" height="20"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vej-0u-HaW">
+                                <rect key="frame" x="290" y="145" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="vej-0u-HaW" firstAttribute="top" secondItem="wpF-A7-Vxc" secondAttribute="bottom" constant="125" id="3zE-Qj-qlk"/>
                             <constraint firstItem="OPF-FG-hD8" firstAttribute="top" secondItem="4tk-s8-3pa" secondAttribute="bottom" constant="20" id="58C-nu-mIe"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="top" secondItem="wpF-A7-Vxc" secondAttribute="bottom" constant="520" id="6Mx-0w-bat"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="centerY" secondItem="ulW-sE-YvM" secondAttribute="centerY" id="7ON-c2-oZd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="BQk-1L-pG1"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" id="GGj-Fz-w1k"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="centerX" secondItem="ulW-sE-YvM" secondAttribute="centerX" id="Rmv-ga-nRc"/>
+                            <constraint firstItem="OPF-FG-hD8" firstAttribute="top" secondItem="vej-0u-HaW" secondAttribute="bottom" constant="435" id="TVk-kg-uTw"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="8" id="Veg-uO-SAd"/>
                             <constraint firstItem="OPF-FG-hD8" firstAttribute="top" secondItem="4tk-s8-3pa" secondAttribute="bottom" constant="20" id="Wsj-He-dcM"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="top" secondItem="wpF-A7-Vxc" secondAttribute="bottom" constant="521" id="cNC-fE-Wve"/>
@@ -133,6 +135,7 @@
                             <constraint firstAttribute="leadingMargin" secondItem="4tk-s8-3pa" secondAttribute="leading" id="eQd-ix-R9x"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="leading" secondItem="ulW-sE-YvM" secondAttribute="leadingMargin" constant="75" id="fs6-Gg-5Z3"/>
                             <constraint firstItem="4tk-s8-3pa" firstAttribute="leading" secondItem="ulW-sE-YvM" secondAttribute="leadingMargin" constant="75" id="kkk-Eb-MKk"/>
+                            <constraint firstItem="vej-0u-HaW" firstAttribute="centerX" secondItem="ulW-sE-YvM" secondAttribute="centerX" id="qD8-71-C7D"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="vfr-YI-q4E"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4tk-s8-3pa" secondAttribute="trailing" constant="75" id="whv-lA-ZUp"/>
                         </constraints>
@@ -156,6 +159,7 @@
                     <navigationItem key="navigationItem" id="cPR-O8-44U"/>
                     <connections>
                         <outlet property="FBLoginButtonView" destination="4tk-s8-3pa" id="3Bq-hy-zbS"/>
+                        <outlet property="activityIndicator" destination="vej-0u-HaW" id="3yW-SH-2sF"/>
                         <segue destination="erH-4X-w0R" kind="presentation" identifier="toAlbumsCollectionViewController" id="lTa-Ig-5c0"/>
                     </connections>
                 </viewController>

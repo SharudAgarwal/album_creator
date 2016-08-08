@@ -19,7 +19,7 @@ import Kingfisher
 
 //import CryptoSwift
 
-class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+class PicturesCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var picturesViewTitleBar: UINavigationItem!
 
@@ -81,6 +81,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
                         updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.album.id)
                         self.album.setThumbnail("pictures/\(self.album.id)/\(imageID)")
                     }
+                    self.collectionView!.reloadEmptyDataSet()
                 }
             })
 
@@ -91,8 +92,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         super.viewDidLoad()
         databaseRef = FIRDatabase.database().reference()
         storageRef = FIRStorage.storage().reference()
-        collectionView!.emptyDataSetSource = self
-        collectionView!.emptyDataSetDelegate = self
+        self.collectionView!.emptyDataSetSource = self
+        self.collectionView!.emptyDataSetDelegate = self
 //        self.collectionView.footer
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -101,6 +102,11 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 //        self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+    }
+    
+    deinit {
+        self.collectionView!.emptyDataSetSource = nil
+        self.collectionView!.emptyDataSetDelegate = nil
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -112,6 +118,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         print(#file + "::" + #function)
         picturesViewTitleBar.title = self.album.name
         updatePicturesCollection()
+        self.collectionView!.reloadEmptyDataSet()
         print("End of updatePicturesCollection")
     }
     
@@ -124,6 +131,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
             print(snapshot.description)
             self.pictures.append(snapshot)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.pictures.count-1, inSection: 0)])
+            self.collectionView!.reloadEmptyDataSet()
         })
     }
     
@@ -195,18 +203,6 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         })
     }
     
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        let str = album.name
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
-        return NSAttributedString(string: str, attributes: attrs)
-    }
-
-    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        let str = "You currently have no photos in this album."
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
-        return NSAttributedString(string: str, attributes: attrs)
-    }
-    
 //    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
 //        // move your data order
 //    }
@@ -243,4 +239,26 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     }
     */
 
+}
+
+extension PicturesCollectionViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource {
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = album.name
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "You currently have no photos in this album."
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+
+    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+        if (self.pictures.isEmpty) {
+            return true
+        } else {
+            return false
+        }
+    }
 }

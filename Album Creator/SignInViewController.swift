@@ -13,11 +13,13 @@ import FirebaseAuth
 
 import FBSDKLoginKit
 
-import PKHUD
+//import PKHUD
 
 class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var FBLoginButtonView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+//    var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
     private var databaseRef: FIRDatabaseReference!
     private let albumsSegue = "toAlbumsCollectionViewController"
@@ -46,10 +48,25 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             loginView.readPermissions = ["public_profile", "email", "user_friends"]
             loginView.delegate = self
         }
-
+        activityIndicator.hidesWhenStopped = true
+//        activityIndicator.activityIndicatorViewStyle  = UIActivityIndicatorViewStyle.Gray
+//        activityIndicator.center = view.center
+//        self.view.addSubview(activityIndicator)
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(animated: Bool) {
+//        CGRect activityIndicatorFrame = acitvity
+/*        var activityIndicatorFrame = activityIndicator.frame
+        activityIndicatorFrame.origin.x = 0.5*self.view.frame.width
+        activityIndicatorFrame.origin.y = 0.25*self.view.frame.height
+        activityIndicator.frame = activityIndicatorFrame
+        self.activityIndicator.startAnimating()
+*/
+//        frame.origin.y=10;//pass the cordinate which you want
+//        frame.origin.x= 12;//pass the cordinate which you want
+//        myLabel.frame= frame;
+    }
 //    override func viewDidAppear(animated: Bool) {
 //        if (userLoggedIn) {
 //            print("\(#function):: How did this happen?!")
@@ -81,7 +98,8 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     func firebaseLogin() {
         userLoggedIn = true
-        showProgressBar()
+        self.activityIndicator.startAnimating()
+//        showProgressBar()
         let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
         FIRAuth.auth()?.signInWithCredential(credential, completion: { (user, error) in
             if let error = error {
@@ -107,18 +125,19 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
                 print("\(#function):: sender = \(sender)")
                 destinationVC.currentUser = sender as? User
             }
-            HUD.hide()
+            activityIndicator.stopAnimating()
+//            HUD.hide()
         } else {
             print("\(#function):: Segue identifier didn't match. Identifier = \(segue.identifier)")
         }
     }
-    
+/*
     func showProgressBar() {
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
         HUD.show(.Progress)
     }
-    
+*/
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
         print("User Logged Out")
         userLoggedIn = false

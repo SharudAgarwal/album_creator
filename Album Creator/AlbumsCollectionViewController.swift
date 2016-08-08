@@ -14,7 +14,7 @@ import SwiftyJSON
 import DZNEmptyDataSet
 import Photos
 
-class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
 
     //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
@@ -31,19 +31,22 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     private let reuseIdentifier = "albumCell"
     private let numberOfItemsPerRow = 3
     
-    //FIXME: Add "add album" buttom
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\(#function):: Albums Collection View did load")
         databaseRef = FIRDatabase.database().reference()
         storageRef = FIRStorage.storage().reference()
-        collectionView!.emptyDataSetSource = self
-        collectionView!.emptyDataSetDelegate = self
+        self.collectionView!.emptyDataSetSource = self
+        self.collectionView!.emptyDataSetDelegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Do any additional setup after loading the view.
+    }
+    
+    deinit {
+        self.collectionView!.emptyDataSetSource = nil
+        self.collectionView!.emptyDataSetDelegate = nil
     }
 
 //    override func viewDidAppear(animated: Bool) {
@@ -108,8 +111,9 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         cell.albumNameLabel.text = albumName
         if (albumJSON[Constants.AlbumFields.thumbnailURL].string != nil) {
             setCellImageView(cell, snapshotJSON: albumJSON, storageRef: storageRef)
+        } else {
+            cell.albumImageView.image = nil
         }
-        //FIXME: Probably need to set here what image to display when album is empty
         return cell
     }
 
@@ -119,11 +123,6 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let albumJSON = JSON(albumSnapshot.value!)
         let thumbnail = albumJSON[Constants.AlbumFields.thumbnailURL].string
         let chosenAlbum = Album(albumName: albumJSON[Constants.AlbumFields.name].string!, id: albumSnapshot.key, thumbnailURL: thumbnail, username: currentUser!.id)
-/*        print("albumSnapshot value = \(albumSnapshot.value)")
-        for child in albumSnapshot.children {
-            print("albumSnapshot children are: \(child)")
-        }
- */
         performSegueWithIdentifier(picturesSegue, sender: chosenAlbum)
     }
     
@@ -131,7 +130,6 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         if sender != nil && segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
                 pictureVC.album = sender as? Album
-//                pictureVC.albumThumbnailSet = false
             }
         }
 /*        else if segue.identifier == picturesSegue {
@@ -147,6 +145,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         print(#file + "::" + #function)
         self.navigationItem.setHidesBackButton(true, animated: false)
         updateCollection()
+        self.collectionView?.reloadEmptyDataSet()
         print("End of updateCollection")
     }
     
@@ -171,6 +170,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
                 print(snapshot.description)
                 self.albums.append(snapshot)
                 self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)])
+                self.collectionView!.reloadEmptyDataSet()
             })
             //            albumAddedToUser(snapshot)
         })
@@ -197,18 +197,6 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
             // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
             self.collectionViewLayout.invalidateLayout()
         })
-    }
-    
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        let str = "Welcome!"
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
-        return NSAttributedString(string: str, attributes: attrs)
-    }
-    
-    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        let str = "You currently have no albums."
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
-        return NSAttributedString(string: str, attributes: attrs)
     }
     
     // MARK: UICollectionViewDelegate
@@ -242,4 +230,27 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     }
     */
 
+}
+
+extension AlbumsCollectionViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource {
+    
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "Welcome!"
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+    
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let str = "You currently have no albums."
+        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        return NSAttributedString(string: str, attributes: attrs)
+    }
+    
+    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+        if (self.albums.isEmpty) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
