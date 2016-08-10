@@ -14,7 +14,7 @@ import SwiftyJSON
 import DZNEmptyDataSet
 import Photos
 
-class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout {
+class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, UITabBarControllerDelegate {
 
     //    var myAlbums = Albums().albums
     var databaseRef: FIRDatabaseReference!
@@ -127,10 +127,15 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let tabVC = segue.destinationViewController as! UITabBarController
         if sender != nil && segue.identifier == picturesSegue {
-            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
-                pictureVC.album = sender as? Album
-            }
+            tabVC.selectedIndex = 0
+            let pictureVC = tabVC.selectedViewController as! PicturesCollectionViewController
+//            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
+            pictureVC.album = sender as? Album
+//            }
+        } else {
+            fatalError("Segue Identifier != picturesSegue")
         }
 /*        else if segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {

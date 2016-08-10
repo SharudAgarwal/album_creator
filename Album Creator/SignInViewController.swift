@@ -118,12 +118,17 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         print("\(#function)")
-
+        let tabVC = segue.destinationViewController as! UITabBarController
+        
         if (segue.identifier! == albumsSegue) {
-            let nav = segue.destinationViewController as! UINavigationController
+//            let nav = tabVC.viewcon as! UINavigationController
+            tabVC.selectedIndex = 0
+            let nav = tabVC.selectedViewController as! UINavigationController
             if let destinationVC = nav.topViewController as? AlbumsCollectionViewController {
                 print("\(#function):: sender = \(sender)")
                 destinationVC.currentUser = sender as? User
+            } else {
+                fatalError("Could not segue to a AlbumsCollectionViewController from SignInViewController")
             }
             activityIndicator.stopAnimating()
 //            HUD.hide()
