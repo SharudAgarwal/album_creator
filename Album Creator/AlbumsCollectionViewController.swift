@@ -127,9 +127,12 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let tabVC = segue.destinationViewController as! UITabBarController
+//        let tabVC = segue.destinationViewController as! UITabBarController
         if sender != nil && segue.identifier == picturesSegue {
-            tabVC.selectedIndex = 0
+            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
+                pictureVC.album = sender as? Album
+            }
+/*            tabVC.selectedIndex = 0
             let pictureVC = tabVC.selectedViewController as! PicturesCollectionViewController
 //            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
             pictureVC.album = sender as? Album
@@ -137,12 +140,14 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         } else {
             fatalError("Segue Identifier != picturesSegue")
         }
+ */
 /*        else if segue.identifier == picturesSegue {
             if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
 //                pictureVC.album = self.tappedAlbumID
 //                pictureVC.albumThumbnailSet = true
             }
-        } */
+        }*/
+        }
     }
     
     // Will update the table by calling updateTable()
