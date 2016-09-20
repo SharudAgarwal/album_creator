@@ -26,7 +26,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     private var databaseRef: FIRDatabaseReference!
     private var storageRef: FIRStorageReference!
     private var pictures: [FIRDataSnapshot]! = []
-    private let reuseIdentifier = "pictureCell"
+    private let pictureReuseIdentifier = "pictureCell"
+    private let addPicReuseIdentifier = "addPicturesCell"
     private let numberOfItemsPerRow = 3
     
     private var picturesRefHandle: FIRDatabaseHandle!
@@ -94,7 +95,15 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         storageRef = FIRStorage.storage().reference()
         self.collectionView!.emptyDataSetSource = self
         self.collectionView!.emptyDataSetDelegate = self
-//        self.collectionView.footer
+/*        let tabBarController = self.tabBarController
+        let tabBar = tabBarController?.tabBar
+        
+        let tabBarItem1 = UITabBarItem(title: "Pictures", image: UIImage(named: "tab_icon_normal"), selectedImage: UIImage(named: "tab_icon_seelcted"))
+        let tabBarItem2 = UITabBarItem(title: "Settings", image: UIImage(named: "tab_icon_normal"), selectedImage: UIImage(named: "tab_icon_seelcted"))
+        let tabBarItems: [UITabBarItem] = [tabBarItem1, tabBarItem2]
+        
+        tabBar?.setItems(tabBarItems, animated: false)
+*/        //        self.collectionView.footer
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -162,7 +171,10 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
+    /*    if (indexPath.row != numberOfItemsPerRow) {
+            cell = CollectionView.dequeueReusableCellWithReuseIdentifier(addPicturesReuseIdentifier, forIndexPath: indexPath) as! AddPicturesCollectionViewCell
+        }*/
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(pictureReuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
         print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL)")
