@@ -160,6 +160,7 @@
 					7B5BCA241CFCD29100055981 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = LLZ66ZK6W6;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -380,6 +381,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.agarwals.Album-Creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -392,6 +394,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.agarwals.Album-Creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

@@ -29,11 +29,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>PKHUD.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Album Creator.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,12 +47,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>1DE93A359FA21F91DFBE81309E851A4A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2E303C3CE7513908EE880D9CA833AFAE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4A2ACA987BF3E25F56964952B3B3721C</key>
+		<key>50911F66B534C83DF2B4B47BB61FD879</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,22 +67,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6F535B0BDBE8A6E86573005D86A03769</key>
+		<key>7933025DE6B1A8310FA644FE0C2AAF8C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>9D0F2E5EA1B46A5D72FFD42B0B39DBBC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A14D8BA6703C474E6BC2E4686663CD68</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F6F0516F82D07656D12F1C0716898F73</key>
 		<dict>
 			<key>primary</key>
 			<true/>

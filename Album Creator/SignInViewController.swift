@@ -13,8 +13,6 @@ import FirebaseAuth
 
 import FBSDKLoginKit
 
-//import PKHUD
-
 class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var FBLoginButtonView: UIView!
@@ -136,13 +134,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             print("\(#function):: Segue identifier didn't match. Identifier = \(segue.identifier)")
         }
     }
-/*
-    func showProgressBar() {
-        PKHUD.sharedHUD.dimsBackground = true
-        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
-        HUD.show(.Progress)
-    }
-*/
+
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
         print("User Logged Out")
         userLoggedIn = false
