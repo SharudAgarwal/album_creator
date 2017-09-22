@@ -17,7 +17,7 @@ target 'Album Creator' do
 
   pod 'SwiftyJSON'#, :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
   pod 'DZNEmptyDataSet'
-  pod 'Kingfisher' 
+  pod 'Kingfisher' , '~> 3.x' 
 
 #  pod 'CryptoSwift'
 

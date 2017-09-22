@@ -56,7 +56,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .alert)
         let addAction = UIAlertAction(title: "Save", style: .default) { _ in
             if let albumName = alertController.textFields![0].text {
-                if (self.albumNameExists(albumName)) {
+                if (self.albumNameExists(albumName: albumName)) {
                     let invalidNameAlertController = UIAlertController(title: "Invalid Album Name", message: "You already have an album titled \(albumName), please choose a unique name", preferredStyle: .alert)
                     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
                     invalidNameAlertController.addAction(cancelAction)
@@ -64,7 +64,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
                 } else {
                     let albumID = self.createAlbumDatabaseID()
                     updateDatabaseUserAndAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
-                    updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
+                    updateDatabaseWithName(root: "albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
                     let album = Album(albumName: albumName, id: albumID)
                     self.performSegue(withIdentifier: self.picturesSegue, sender: album)
                 }
@@ -97,7 +97,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     }
 
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albums.count
     }
 
@@ -110,7 +110,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         self.userAlbumNames.append(albumName!)
         cell.albumNameLabel.text = albumName
         if (albumJSON[Constants.AlbumFields.thumbnailURL].string != nil) {
-            setCellImageView(cell, snapshotJSON: albumJSON, storageRef: storageRef)
+            setCellImageView(cell: cell, snapshotJSON: albumJSON, storageRef: storageRef)
         } else {
             cell.albumImageView.image = nil
         }
@@ -123,7 +123,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         let albumJSON = JSON(albumSnapshot.value!)
         let thumbnail = albumJSON[Constants.AlbumFields.thumbnailURL].string
         let chosenAlbum = Album(albumName: albumJSON[Constants.AlbumFields.name].string!, id: albumSnapshot.key, thumbnailURL: thumbnail, username: currentUser!.id)
-        performSegueWithIdentifier(picturesSegue, sender: chosenAlbum)
+        performSegue(withIdentifier: picturesSegue, sender: chosenAlbum)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -179,7 +179,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
                 // add album to table
                 print(snapshot.description)
                 self.albums.append(snapshot)
-                self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)])
+                self.collectionView?.insertItems(at: [IndexPath(row: self.albums.count-1, section: 0)])
                 self.collectionView!.reloadEmptyDataSet()
             })
             //            albumAddedToUser(snapshot)

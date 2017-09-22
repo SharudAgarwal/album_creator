@@ -12,7 +12,7 @@ import Firebase
 import Kingfisher
 import SwiftyJSON
 
-func updateDatabaseWithName(root: String, name: String, databaseRef: FIRDatabaseReference, id: String) {
+func updateDatabaseWithName(root: String, name: String, databaseRef: DatabaseReference, id: String) {
     //        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
 //    var childUpdates = [String : [String : String]]()
     var newDataRef = databaseRef.child("\(root)/\(id)")
@@ -35,7 +35,7 @@ func updateDatabaseWithName(root: String, name: String, databaseRef: FIRDatabase
     newDataRef.updateChildValues(post)
 }
 
-func updateDatabaseWithPost(root: String, post: [String:String], databaseRef: FIRDatabaseReference, id: String) {
+func updateDatabaseWithPost(root: String, post: [String:String], databaseRef: DatabaseReference, id: String) {
     //        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
 //    var childUpdates = [String : [String : String]]()
     let newDataRef = databaseRef.child("\(root)/\(id)")
@@ -64,32 +64,32 @@ func updateDatabaseUserAndAlbum(userID: String, albumID: String, databaseRef: Da
 func setCellImageView(cell: UICollectionViewCell, snapshotJSON: JSON, storageRef: StorageReference) {
     
     if let imageCell = cell as? AlbumsCollectionViewCell {
-        imageCell.albumImageView.kf_showIndicatorWhenLoading = true
+        imageCell.albumImageView.kf.indicatorType = .activity
         let picturePath = snapshotJSON[Constants.AlbumFields.thumbnailURL].string
         if picturePath == nil {
             fatalError(#function)
         }
         let imageRef = storageRef.child(picturePath!)
-        imageRef.downloadURLWithCompletion { (URL, error) -> Void in
+        imageRef.downloadURL { (URL, error) -> Void in
             
             if let error = error {
                 print("\(#function):: error = \(error.localizedDescription)")
             } else {
                 print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
-                imageCell.albumImageView.kf_setImageWithURL(URL!, placeholderImage: nil)
+                imageCell.albumImageView.kf.setImage(with: URL!)
             }
         }
     } else if let imageCell = cell as? PicturesCollectionViewCell {
-        imageCell.pictureImageView.kf_showIndicatorWhenLoading = true
+        imageCell.pictureImageView.kf.indicatorType = .activity
         let picturePath = snapshotJSON[Constants.PictureFields.pathToImage].string
         let imageRef = storageRef.child(picturePath!)
-        imageRef.downloadURLWithCompletion { (URL, error) -> Void in
+        imageRef.downloadURL { (URL, error) -> Void in
             
             if let error = error {
                 print("\(#function):: error = \(error.localizedDescription)")
             } else {
                 print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
-                imageCell.pictureImageView.kf_setImageWithURL(URL!, placeholderImage: nil)
+                imageCell.pictureImageView.kf.setImage(with: URL!, placeholder: nil)
             }
         }
     }

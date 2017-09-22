@@ -72,15 +72,15 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
             let filepathRef = self.storageRef.child(filePath)
             filepathRef.putFile(from: imageFile!, metadata: nil, completion: { (metadata, error) in
                 if let error = error {
-                    print("Error uploading: \(error.description)")
+                    print("Error uploading: \(error.localizedDescription)")
                     return
                 } else {
                     print("Upload Succeeded!")
-                    updateDatabaseWithName("pictures", name: imageID, databaseRef: self.databaseRef, id: self.album.id)
+                    updateDatabaseWithName(root: "pictures", name: imageID, databaseRef: self.databaseRef, id: self.album.id)
                     if (self.album.thumbnailURL == nil) {
                         let post = [Constants.AlbumFields.thumbnailURL:"pictures/\(self.album.id)/\(imageID)"]
-                        updateDatabaseWithPost("albums", post: post, databaseRef: self.databaseRef, id: self.album.id)
-                        self.album.setThumbnail("pictures/\(self.album.id)/\(imageID)")
+                        updateDatabaseWithPost(root: "albums", post: post, databaseRef: self.databaseRef, id: self.album.id)
+                        self.album.setThumbnail(thumbnailPath: "pictures/\(self.album.id)/\(imageID)")
                     }
                     self.collectionView!.reloadEmptyDataSet()
                 }
@@ -139,7 +139,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         picturesRefHandle = self.databaseRef.child("pictures/\(album.id)").observe(.childAdded, with: { (snapshot) in
             print(snapshot.description)
             self.pictures.append(snapshot)
-            self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.pictures.count-1, inSection: 0)])
+            self.collectionView?.insertItems(at: [NSIndexPath(row: self.pictures.count-1, section: 0) as IndexPath])
             self.collectionView!.reloadEmptyDataSet()
         })
     }
@@ -179,7 +179,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let pictureJSON = JSON(pictureSnapshot.value!)
         print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL)")
         if (pictureJSON[Constants.PictureFields.pathToImage].string != nil) {
-            setCellImageView(cell, snapshotJSON: pictureJSON, storageRef: storageRef)
+            setCellImageView(cell: cell, snapshotJSON: pictureJSON, storageRef: storageRef)
         } else {
             fatalError("\(#function):: How did I get here??")
         }

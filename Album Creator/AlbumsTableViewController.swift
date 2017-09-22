@@ -58,7 +58,7 @@ class AlbumsTableViewController: UITableViewController {
         let albumJSON = JSON(albumSnapshot.value!)
         cell.AlbumNameLabel.text = albumJSON[Constants.AlbumFields.name].string
         if let albumThumbnailURL = albumJSON[Constants.AlbumFields.thumbnailURL].string {
-            cell.AlbumImageView.image = downloadImage(albumThumbnailURL)
+            cell.AlbumImageView.image = downloadImage(url: albumThumbnailURL)
         } else {
             // Todo: Need to implement nil image object class from github
         }
@@ -150,7 +150,7 @@ class AlbumsTableViewController: UITableViewController {
                 // add album to table
                 print(snapshot.description)
                 self.albums.append(snapshot)
-                self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.albums.count-1, inSection: 0)], withRowAnimation: .Automatic)
+                self.tableView.insertRows(at: [IndexPath(row: self.albums.count-1, section: 0)], with: .automatic)
             })
 //            albumAddedToUser(snapshot)
         })

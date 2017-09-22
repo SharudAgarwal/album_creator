@@ -72,7 +72,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
 //        }
 //    }
 
-    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         print("User clicked login")
         
         if ((error) != nil) {
@@ -105,9 +105,9 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             } else {
                 let currentUser = User(username: user!.displayName!, id: user!.uid)
 //                currentUser.name = user?.providerID //user?.displayName
-                currentUser.profilePic = user?.photoURL as! NSURL
+                currentUser.profilePic = user?.photoURL as! NSURL as URL
                 print("\(#function):: User now initialized with name \(currentUser.name) & id = \(currentUser.id)")
-                updateDatabaseWithName("users", name: currentUser.name, databaseRef: self.databaseRef, id: currentUser.id)
+                updateDatabaseWithName(root: "users", name: currentUser.name, databaseRef: self.databaseRef, id: currentUser.id)
                 self.performSegue(withIdentifier: self.albumsSegue, sender: currentUser)
             }
         })
