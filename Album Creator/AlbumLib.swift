@@ -43,7 +43,7 @@ func updateDatabaseWithPost(root: String, post: [String:String], databaseRef: FI
     newDataRef.updateChildValues(post)
 }
 
-func updateDatabaseUserAndAlbum(userID userID: String, albumID: String, databaseRef: FIRDatabaseReference) {
+func updateDatabaseUserAndAlbum(userID: String, albumID: String, databaseRef: DatabaseReference) {
     //        let key = databaseRef.child("pictures/\(self.albumID!)").childByAutoId().key
     // add album to user's list of albums
     var root = Constants.FIRDatabaseRoots.users
@@ -61,7 +61,7 @@ func updateDatabaseUserAndAlbum(userID userID: String, albumID: String, database
 }
 
 
-func setCellImageView(cell: UICollectionViewCell, snapshotJSON: JSON, storageRef: FIRStorageReference) {
+func setCellImageView(cell: UICollectionViewCell, snapshotJSON: JSON, storageRef: StorageReference) {
     
     if let imageCell = cell as? AlbumsCollectionViewCell {
         imageCell.albumImageView.kf_showIndicatorWhenLoading = true
@@ -103,11 +103,11 @@ func downloadImage(url: String) -> UIImage? {
     var downloadedImage: UIImage?
     
     if url.hasPrefix(Constants.FirebaseFields.urlPrefix) {
-        let storageRef = FIRStorage.storage().reference()
+        let storageRef = Storage.storage().reference()
         // Create a reference to the file you want to download
         let imageRef = storageRef.child(url)
         // Fetch the download URL
-        imageRef.downloadURLWithCompletion({ (URL, error) in
+        imageRef.downloadURL(completion: { (URL, error) in
             if (error != nil) {
                 // Handle any errors
                 print("\(#function):: Error downloading: \(error)")
@@ -120,19 +120,19 @@ func downloadImage(url: String) -> UIImage? {
 //                }
             }
         })
-    } else if let nonFirebaseURL = NSURL(string: url), data = NSData(contentsOfURL: nonFirebaseURL) {
+    } else if let nonFirebaseURL = URL(string: url), let data = try? Data(contentsOf: nonFirebaseURL) {
         downloadedImage = UIImage.init(data: data)
     }
     
     return downloadedImage
 }
 
-func getDownloadURL (pathToImage: String, storageRef: FIRStorageReference) -> NSURL? {
+func getDownloadURL (pathToImage: String, storageRef: StorageReference) -> URL? {
     
-    var downloadURL: NSURL?
+    var downloadURL: URL?
     
     let imageRef = storageRef.child(pathToImage)
-    imageRef.downloadURLWithCompletion { (URL, error) -> Void in
+    imageRef.downloadURL { (URL, error) -> Void in
         
         if let error = error {
             print("\(#function):: error = \(error.localizedDescription)")
@@ -149,18 +149,18 @@ func getDownloadURL (pathToImage: String, storageRef: FIRStorageReference) -> NS
     return downloadURL
 }
 
-func albumAddedToUser(snapshot: FIRDataSnapshot) {
+func albumAddedToUser(snapshot: DataSnapshot) {
     
 }
 
-func albumRemovedFromUser(snapshot: FIRDataSnapshot) {
+func albumRemovedFromUser(snapshot: DataSnapshot) {
     print("\(#function):: Album was removed from user - \(snapshot)")
 }
 
-func imageType(imgData : NSData) -> String
+func imageType(imgData : Data) -> String
 {
-    var c = [UInt8](count: 1, repeatedValue: 0)
-    imgData.getBytes(&c, length: 1)
+    var c = [UInt8](repeating: 0, count: 1)
+    (imgData as NSData).getBytes(&c, length: 1)
     
     let ext : String
     
@@ -186,8 +186,8 @@ func imageType(imgData : NSData) -> String
 
 func stringUpToChar(origString: String, delimitingChar: Character) -> String {
     let chars = origString.characters
-    if let idx = chars.indexOf(delimitingChar) {
-        return String(chars.prefixUpTo(idx))
+    if let idx = chars.index(of: delimitingChar) {
+        return String(chars.prefix(upTo: idx))
     }
     return origString
 }

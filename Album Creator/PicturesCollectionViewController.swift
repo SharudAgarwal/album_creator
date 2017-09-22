@@ -23,32 +23,32 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     
     @IBOutlet weak var picturesViewTitleBar: UINavigationItem!
 
-    private var databaseRef: FIRDatabaseReference!
-    private var storageRef: FIRStorageReference!
-    private var pictures: [FIRDataSnapshot]! = []
-    private let pictureReuseIdentifier = "pictureCell"
-    private let addPicReuseIdentifier = "addPicturesCell"
-    private let numberOfItemsPerRow = 3
+    fileprivate var databaseRef: DatabaseReference!
+    fileprivate var storageRef: StorageReference!
+    fileprivate var pictures: [DataSnapshot]! = []
+    fileprivate let pictureReuseIdentifier = "pictureCell"
+    fileprivate let addPicReuseIdentifier = "addPicturesCell"
+    fileprivate let numberOfItemsPerRow = 3
     
-    private var picturesRefHandle: FIRDatabaseHandle!
+    fileprivate var picturesRefHandle: DatabaseHandle!
     
     var album: Album!
 //    var albumID: String?
 //    var albumThumbnailSet = false
 
     
-    @IBAction func addPicturesToAlbum(sender: UIBarButtonItem) {
+    @IBAction func addPicturesToAlbum(_ sender: UIBarButtonItem) {
         let picker = UIImagePickerController()
         picker.delegate = self
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
-            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
+            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
             picker.allowsEditing = false
         } else {
-            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
             picker.allowsEditing = false
         }
         
-        presentViewController(picker, animated: true, completion:nil)
+        present(picker, animated: true, completion:nil)
     }
 
 /*
@@ -58,19 +58,19 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 */
     
  
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        picker.dismissViewControllerAnimated(true, completion:nil)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion:nil)
         
-        let referenceUrl = info[UIImagePickerControllerReferenceURL] as! NSURL
-        let assets = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil)
+        let referenceUrl = info[UIImagePickerControllerReferenceURL] as! URL
+        let assets = PHAsset.fetchAssets(withALAssetURLs: [referenceUrl], options: nil)
         print("The number of assets fetched from Photos: \(assets.count)")
         let asset = assets.firstObject
-        asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, editingInfo) in
+        asset?.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, editingInfo) in
             let imageFile = contentEditingInput?.fullSizeImageURL
             let imageID = self.databaseRef.child("pictures/\(self.album.id)").childByAutoId().key
             let filePath = "pictures/\(self.album.id)/\(imageID)"
             let filepathRef = self.storageRef.child(filePath)
-            filepathRef.putFile(imageFile!, metadata: nil, completion: { (metadata, error) in
+            filepathRef.putFile(from: imageFile!, metadata: nil, completion: { (metadata, error) in
                 if let error = error {
                     print("Error uploading: \(error.description)")
                     return
@@ -91,8 +91,8 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        databaseRef = FIRDatabase.database().reference()
-        storageRef = FIRStorage.storage().reference()
+        databaseRef = Database.database().reference()
+        storageRef = Storage.storage().reference()
         self.collectionView!.emptyDataSetSource = self
         self.collectionView!.emptyDataSetDelegate = self
 /*        let tabBarController = self.tabBarController
@@ -118,12 +118,12 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         self.collectionView!.emptyDataSetDelegate = nil
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         print(#file + "::" + #function)
-        self.databaseRef.child("pictures/\(album.id)").removeObserverWithHandle(picturesRefHandle)
+        self.databaseRef.child("pictures/\(album.id)").removeObserver(withHandle: picturesRefHandle)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print(#file + "::" + #function)
         picturesViewTitleBar.title = self.album.name
         updatePicturesCollection()
@@ -136,7 +136,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         self.collectionView?.reloadData()
         
         // Listen for new Pictures from Firebase database
-        picturesRefHandle = self.databaseRef.child("pictures/\(album.id)").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        picturesRefHandle = self.databaseRef.child("pictures/\(album.id)").observe(.childAdded, with: { (snapshot) in
             print(snapshot.description)
             self.pictures.append(snapshot)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forRow: self.pictures.count-1, inSection: 0)])
@@ -161,20 +161,20 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 
     // MARK: UICollectionViewDataSource
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pictures.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     /*    if (indexPath.row != numberOfItemsPerRow) {
             cell = CollectionView.dequeueReusableCellWithReuseIdentifier(addPicturesReuseIdentifier, forIndexPath: indexPath) as! AddPicturesCollectionViewCell
         }*/
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(pictureReuseIdentifier, forIndexPath: indexPath) as! PicturesCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: pictureReuseIdentifier, for: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
         print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL)")
@@ -186,13 +186,13 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         return cell
     }
     
-    override func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // This will cancel all unfinished downloading task when the cell disappearing.
         // swiftlint:disable force_cast
         (cell as! PicturesCollectionViewCell).pictureImageView.kf_cancelDownloadTask()
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
         let totalSpace = flowLayout.sectionInset.left + flowLayout.sectionInset.right + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsPerRow - 1))
@@ -200,11 +200,11 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         return CGSize(width: size, height: size)
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         // Code here will execute before the rotation begins.
         // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
-        coordinator.animateAlongsideTransition({ (nil) -> Void in
+        coordinator.animate(alongsideTransition: { (nil) -> Void in
             // Place code here to perform animations during the rotation.
             // You can pass nil for this closure if not necessary.
         },
@@ -254,19 +254,19 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
 }
 
 extension PicturesCollectionViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource {
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let str = album.name
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
         return NSAttributedString(string: str, attributes: attrs)
     }
 
-    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let str = "You currently have no photos in this album."
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
         return NSAttributedString(string: str, attributes: attrs)
     }
 
-    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
         if (self.pictures.isEmpty) {
             return true
         } else {

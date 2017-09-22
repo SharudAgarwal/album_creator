@@ -17,25 +17,25 @@ import Photos
 class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, UITabBarControllerDelegate {
 
     //    var myAlbums = Albums().albums
-    var databaseRef: FIRDatabaseReference!
-    var albums: [FIRDataSnapshot]! = []
+    var databaseRef: DatabaseReference!
+    var albums: [DataSnapshot]! = []
     var tappedAlbumID: String?
     var currentUser: User?
     
-    private var albumsRefHandle: FIRDatabaseHandle!
-    private var usersRefHandle: FIRDatabaseHandle!
-    private var storageRef: FIRStorageReference!
-    private var userAlbumNames = [String]()
-    private let picturesSegue = "toPicturesCollectionViewController"
-    private let createNewAlbumSegue = "toCreateNewAlbumViewController"
-    private let reuseIdentifier = "albumCell"
-    private let numberOfItemsPerRow = 3
+    fileprivate var albumsRefHandle: DatabaseHandle!
+    fileprivate var usersRefHandle: DatabaseHandle!
+    fileprivate var storageRef: StorageReference!
+    fileprivate var userAlbumNames = [String]()
+    fileprivate let picturesSegue = "toPicturesCollectionViewController"
+    fileprivate let createNewAlbumSegue = "toCreateNewAlbumViewController"
+    fileprivate let reuseIdentifier = "albumCell"
+    fileprivate let numberOfItemsPerRow = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\(#function):: Albums Collection View did load")
-        databaseRef = FIRDatabase.database().reference()
-        storageRef = FIRStorage.storage().reference()
+        databaseRef = Database.database().reference()
+        storageRef = Storage.storage().reference()
         self.collectionView!.emptyDataSetSource = self
         self.collectionView!.emptyDataSetDelegate = self
         // Uncomment the following line to preserve selection between presentations
@@ -53,34 +53,34 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
 //    }
     
     @IBAction func createNewAlbum(sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .Alert)
-        let addAction = UIAlertAction(title: "Save", style: .Default) { _ in
+        let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .alert)
+        let addAction = UIAlertAction(title: "Save", style: .default) { _ in
             if let albumName = alertController.textFields![0].text {
                 if (self.albumNameExists(albumName)) {
-                    let invalidNameAlertController = UIAlertController(title: "Invalid Album Name", message: "You already have an album titled \(albumName), please choose a unique name", preferredStyle: .Alert)
-                    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+                    let invalidNameAlertController = UIAlertController(title: "Invalid Album Name", message: "You already have an album titled \(albumName), please choose a unique name", preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
                     invalidNameAlertController.addAction(cancelAction)
-                    self.presentViewController(invalidNameAlertController, animated: true, completion: nil)
+                    self.present(invalidNameAlertController, animated: true, completion: nil)
                 } else {
                     let albumID = self.createAlbumDatabaseID()
                     updateDatabaseUserAndAlbum(userID: self.currentUser!.id, albumID: albumID, databaseRef: self.databaseRef)
                     updateDatabaseWithName("albums", name: albumName, databaseRef: self.databaseRef, id: albumID)
                     let album = Album(albumName: albumName, id: albumID)
-                    self.performSegueWithIdentifier(self.picturesSegue, sender: album)
+                    self.performSegue(withIdentifier: self.picturesSegue, sender: album)
                 }
             } else {
                 // user did not fill field
             }
         }
-        alertController.addTextFieldWithConfigurationHandler { (textField) in
+        alertController.addTextField { (textField) in
             textField.placeholder = ""
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
         
         alertController.addAction(addAction)
         alertController.addAction(cancelAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     func albumNameExists(albumName: String) -> Bool {
@@ -92,7 +92,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         return albumID
     }
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
@@ -101,10 +101,10 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         return albums.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AlbumsCollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! AlbumsCollectionViewCell
         // unpack album data from Firebase DataSnapshot
-        let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
+        let albumSnapshot: DataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
         let albumName = albumJSON[Constants.AlbumFields.name].string
         self.userAlbumNames.append(albumName!)
@@ -117,7 +117,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         return cell
     }
 
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let albumSnapshot = self.albums[indexPath.row]
 //        self.tappedAlbumID = albumSnapshot.key
         let albumJSON = JSON(albumSnapshot.value!)
@@ -126,10 +126,10 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         performSegueWithIdentifier(picturesSegue, sender: chosenAlbum)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        let tabVC = segue.destinationViewController as! UITabBarController
         if sender != nil && segue.identifier == picturesSegue {
-            if let pictureVC = segue.destinationViewController as? PicturesCollectionViewController {
+            if let pictureVC = segue.destination as? PicturesCollectionViewController {
                 pictureVC.album = sender as? Album
             }
 /*            tabVC.selectedIndex = 0
@@ -151,7 +151,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
     }
     
     // Will update the table by calling updateTable()
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print(#file + "::" + #function)
         self.navigationItem.setHidesBackButton(true, animated: false)
         updateCollection()
@@ -159,9 +159,9 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         print("End of updateCollection")
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         print(#file + "::" + #function)
-        self.databaseRef.child("users/\(currentUser!.id)/albums").removeObserverWithHandle(usersRefHandle)
+        self.databaseRef.child("users/\(currentUser!.id)/albums").removeObserver(withHandle: usersRefHandle)
     }
     
     /// Updates albums table view by refetching each image url and album name.
@@ -170,12 +170,12 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         self.collectionView?.reloadData()
         // Listen for new Albums from Firebase database
         print("\(#function):: username = \(currentUser!.id)")
-        usersRefHandle = self.databaseRef.child("users/\(currentUser!.id)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        usersRefHandle = self.databaseRef.child("users/\(currentUser!.id)/albums").observe(.childAdded, with: { (snapshot) in
             // get list of albums the user belongs to from the snapshot
             print("\(#function):: This user is a member of the following albums: \(snapshot.key)")
             let albumUserIsIn = snapshot.key
             // observesingleeventtype for each album
-            self.databaseRef.child("albums/\(albumUserIsIn)").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            self.databaseRef.child("albums/\(albumUserIsIn)").observeSingleEvent(of: .value, with: { (snapshot) in
                 // add album to table
                 print(snapshot.description)
                 self.albums.append(snapshot)
@@ -186,7 +186,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         })
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
         let totalSpace = flowLayout.sectionInset.left + flowLayout.sectionInset.right + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsPerRow - 1))
@@ -194,11 +194,11 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
         return CGSize(width: size, height: size)
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         // Code here will execute before the rotation begins.
         // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
-        coordinator.animateAlongsideTransition({ (nil) -> Void in
+        coordinator.animate(alongsideTransition: { (nil) -> Void in
             // Place code here to perform animations during the rotation.
             // You can pass nil for this closure if not necessary.
         },
@@ -244,19 +244,19 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
 
 extension AlbumsCollectionViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource {
     
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let str = "Welcome!"
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)]
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
         return NSAttributedString(string: str, attributes: attrs)
     }
     
-    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let str = "You currently have no albums."
-        let attrs = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
         return NSAttributedString(string: str, attributes: attrs)
     }
     
-    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
         if (self.albums.isEmpty) {
             return true
         } else {

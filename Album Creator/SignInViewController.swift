@@ -19,17 +19,17 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 //    var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
-    private var databaseRef: FIRDatabaseReference!
-    private let albumsSegue = "toAlbumsCollectionViewController"
-    private var userLoggedIn = false
+    fileprivate var databaseRef: DatabaseReference!
+    fileprivate let albumsSegue = "toAlbumsCollectionViewController"
+    fileprivate var userLoggedIn = false
     
     var userID: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        databaseRef = FIRDatabase.database().reference()
+        databaseRef = Database.database().reference()
         
-        if (FBSDKAccessToken.currentAccessToken() != nil) {
+        if (FBSDKAccessToken.current() != nil) {
             print("\(#function):: Already logged in")
             firebaseLogin()
         }
@@ -53,7 +53,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
 //        CGRect activityIndicatorFrame = acitvity
 /*        var activityIndicatorFrame = activityIndicator.frame
         activityIndicatorFrame.origin.x = 0.5*self.view.frame.width
@@ -72,7 +72,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
 //        }
 //    }
 
-    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         print("User clicked login")
         
         if ((error) != nil) {
@@ -98,25 +98,25 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
         userLoggedIn = true
         self.activityIndicator.startAnimating()
 //        showProgressBar()
-        let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
-        FIRAuth.auth()?.signInWithCredential(credential, completion: { (user, error) in
+        let credential = FacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
+        Auth.auth().signIn(with: credential, completion: { (user, error) in
             if let error = error {
                 print("\(#function):: error = \(error)")
             } else {
                 let currentUser = User(username: user!.displayName!, id: user!.uid)
 //                currentUser.name = user?.providerID //user?.displayName
-                currentUser.profilePic = user?.photoURL
+                currentUser.profilePic = user?.photoURL as! NSURL
                 print("\(#function):: User now initialized with name \(currentUser.name) & id = \(currentUser.id)")
                 updateDatabaseWithName("users", name: currentUser.name, databaseRef: self.databaseRef, id: currentUser.id)
-                self.performSegueWithIdentifier(self.albumsSegue, sender: currentUser)
+                self.performSegue(withIdentifier: self.albumsSegue, sender: currentUser)
             }
         })
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
         print("\(#function)")
-        let tabVC = segue.destinationViewController as! UITabBarController
+        let tabVC = segue.destination as! UITabBarController
         
         if (segue.identifier! == albumsSegue) {
 //            let nav = tabVC.viewcon as! UINavigationController
@@ -135,7 +135,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
         }
     }
 
-    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         print("User Logged Out")
         userLoggedIn = false
     }

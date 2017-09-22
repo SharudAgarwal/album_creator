@@ -6,47 +6,62 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
   - DZNEmptyDataSet (1.8.1)
-  - FBSDKCoreKit (4.16.0):
+  - FBSDKCoreKit (4.26.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.16.0):
+  - FBSDKLoginKit (4.26.0):
     - FBSDKCoreKit
-  - Firebase/Analytics (3.6.0):
-    - FirebaseAnalytics (= 3.4.2)
-  - Firebase/Auth (3.6.0):
-    - Firebase/Analytics
-    - FirebaseAuth (= 3.0.5)
-  - Firebase/Core (3.6.0):
-    - Firebase/Analytics
-  - Firebase/Database (3.6.0):
-    - Firebase/Analytics
-    - FirebaseDatabase (= 3.0.3)
-  - Firebase/Storage (3.6.0):
-    - Firebase/Analytics
-    - FirebaseStorage (= 1.0.3)
-  - FirebaseAnalytics (3.4.2):
-    - FirebaseInstanceID (~> 1.0)
-    - GoogleInterchangeUtilities (~> 1.2)
-    - GoogleSymbolUtilities (~> 1.1)
-    - GoogleUtilities (~> 1.2)
-  - FirebaseAuth (3.0.5):
-    - FirebaseAnalytics (~> 3.3)
-    - GoogleNetworkingUtilities (~> 1.2)
-    - GoogleUtilities (~> 1.2)
-  - FirebaseDatabase (3.0.3):
-    - FirebaseAnalytics (~> 3.3)
-  - FirebaseInstanceID (1.0.8)
-  - FirebaseStorage (1.0.3):
-    - FirebaseAnalytics (~> 3.3)
-    - GoogleNetworkingUtilities (~> 1.2)
-  - GoogleInterchangeUtilities (1.2.1):
-    - GoogleSymbolUtilities (~> 1.0)
-  - GoogleNetworkingUtilities (1.2.1):
-    - GoogleSymbolUtilities (~> 1.0)
-  - GoogleSymbolUtilities (1.1.1)
-  - GoogleUtilities (1.3.1):
-    - GoogleSymbolUtilities (~> 1.0)
-  - Kingfisher (3.1.1)
-  - SwiftyJSON (3.1.0)
+  - Firebase/Auth (4.2.0):
+    - Firebase/Core
+    - FirebaseAuth (= 4.2.0)
+  - Firebase/Core (4.2.0):
+    - FirebaseAnalytics (= 4.0.3)
+    - FirebaseCore (= 4.0.7)
+  - Firebase/Database (4.2.0):
+    - Firebase/Core
+    - FirebaseDatabase (= 4.0.3)
+  - Firebase/Storage (4.2.0):
+    - Firebase/Core
+    - FirebaseStorage (= 2.0.2)
+  - FirebaseAnalytics (4.0.3):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseAuth (4.2.0):
+    - FirebaseAnalytics (~> 4.0)
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (4.0.7):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseDatabase (4.0.3):
+    - FirebaseAnalytics (~> 4.0)
+    - FirebaseCore (~> 4.0)
+    - leveldb-library (~> 1.18)
+  - FirebaseInstanceID (2.0.3)
+  - FirebaseStorage (2.0.2):
+    - FirebaseAnalytics (~> 4.0)
+    - FirebaseCore (~> 4.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.1)
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
+  - GTMSessionFetcher/Core (1.1.11)
+  - Kingfisher (4.0.1)
+  - leveldb-library (1.18.3)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
   - DZNEmptyDataSet
@@ -62,21 +77,22 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
-  FBSDKCoreKit: 7a6baaed4a2b2a244ba253346713bdbc74df135b
-  FBSDKLoginKit: 9a514a55a7d05190f64d4ef09502737588b5b561
-  Firebase: 34187200ef4979dbd485c7aa685ef078bf587c86
-  FirebaseAnalytics: 3f5358d9104adf159cc8d99b7b501e50099a39ad
-  FirebaseAuth: 75a062bbf2d3c97d1e6e55bbc110e13a6853e25d
-  FirebaseDatabase: 750a4a0fe18ef114318876fd654b2d9c671e0992
-  FirebaseInstanceID: ba1e640935235e5fac39dfa816fe7660e72e1a8a
-  FirebaseStorage: 3992817bf405f5c1a4f8349678d22724cd0ef509
-  GoogleInterchangeUtilities: def8415a862effc67d549d5b5b0b9c7a2f97d4de
-  GoogleNetworkingUtilities: 3e83269048cfb498dc7ec83ab36813360965c74f
-  GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
-  GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
-  Kingfisher: 12b755ae697cc9f0fd3e550db8417fa1233e09ab
-  SwiftyJSON: 29b9f2a64f118c07e691667c2ba1efe536acfe0b
+  FBSDKCoreKit: c8b8582311ec11b145451d8b9717dc6cc2ae5a76
+  FBSDKLoginKit: f3f03b94c21eb834af243c0a881d48641f47ca60
+  Firebase: 9548cae14d69718add12d75a5b312893f7ef89c7
+  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
+  FirebaseAuth: 22f8a5170f31d1f111141950590f071f35df3229
+  FirebaseCore: 9a6cc1e3eaf75905390f9220596ad4fd8f92faee
+  FirebaseDatabase: 03940adcac54ce30db06f1fc2136f8581734ce2c
+  FirebaseInstanceID: a4fc702b5a026f7322964376047f1a3f1f7cc6ff
+  FirebaseStorage: 0cca42d9b889a0227c3a50121f45a4469fc9eb27
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  GTMSessionFetcher: 5ad62e8200fa00ed011fe5e08d27fef72c5b1429
+  Kingfisher: b771785e9461ed4b8686d40e7145f9e58100cb24
+  leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 52c2350d6ea7bec9ba7f98e5464a102032f1ec85
+PODFILE CHECKSUM: 81fa645d0e2e7e1fc511fbd0bed24c4d8b14bc91
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.0

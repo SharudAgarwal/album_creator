@@ -9,13 +9,13 @@
 import Foundation
 
 class Album {
-    private(set) var name: String
-    private(set) var id: String
-    private(set) var thumbnailURL: String?
-    private(set) var numOfPics: Int = 0
-    private(set) var numOfUsers: Int = 0
-    private(set) var users = [String]()
-    private(set) var pictures = [String]()
+    fileprivate(set) var name: String
+    fileprivate(set) var id: String
+    fileprivate(set) var thumbnailURL: String?
+    fileprivate(set) var numOfPics: Int = 0
+    fileprivate(set) var numOfUsers: Int = 0
+    fileprivate(set) var users = [String]()
+    fileprivate(set) var pictures = [String]()
     
     init(albumName: String, id: String) {
         self.name = albumName

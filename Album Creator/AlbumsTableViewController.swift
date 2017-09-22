@@ -17,21 +17,21 @@ private let reuseIdentifier = "albumCell"
 class AlbumsTableViewController: UITableViewController {
     
 //    var myAlbums = Albums().albums
-    var databaseRef: FIRDatabaseReference!
-    var albums: [FIRDataSnapshot]! = []
+    var databaseRef: DatabaseReference!
+    var albums: [DataSnapshot]! = []
     
-    private var albumsRefHandle: FIRDatabaseHandle!
-    private var usersRefHandle: FIRDatabaseHandle!
-    private let userID: String = "user1"
-    private var usersAlbumNamesArr = [AnyObject?]()
-    private let picturesSegue = "toPicturesCollectionViewController"
+    fileprivate var albumsRefHandle: DatabaseHandle!
+    fileprivate var usersRefHandle: DatabaseHandle!
+    fileprivate let userID: String = "user1"
+    fileprivate var usersAlbumNamesArr = [AnyObject?]()
+    fileprivate let picturesSegue = "toPicturesCollectionViewController"
     
     var tappedAlbumID: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print(#function)
-        databaseRef = FIRDatabase.database().reference()
+        databaseRef = Database.database().reference()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -47,14 +47,14 @@ class AlbumsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return albums.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AlbumsTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! AlbumsTableViewCell
         // unpack album data from Firebase DataSnapshot
-        let albumSnapshot: FIRDataSnapshot! = self.albums[indexPath.row]
+        let albumSnapshot: DataSnapshot! = self.albums[indexPath.row]
         let albumJSON = JSON(albumSnapshot.value!)
         cell.AlbumNameLabel.text = albumJSON[Constants.AlbumFields.name].string
         if let albumThumbnailURL = albumJSON[Constants.AlbumFields.thumbnailURL].string {
@@ -66,10 +66,10 @@ class AlbumsTableViewController: UITableViewController {
             
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let albumSnapshot = self.albums[indexPath.row]
         self.tappedAlbumID = albumSnapshot.key
-        performSegueWithIdentifier(picturesSegue, sender: nil)
+        performSegue(withIdentifier: picturesSegue, sender: nil)
     }
 /*
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -126,14 +126,14 @@ class AlbumsTableViewController: UITableViewController {
     */
     
     // Will update the table by calling updateTable()
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print(#function)
         updateTable()
         print("End of updateTable")
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        self.databaseRef.child("users/\(userID)/albums").removeObserverWithHandle(usersRefHandle)
+    override func viewWillDisappear(_ animated: Bool) {
+        self.databaseRef.child("users/\(userID)/albums").removeObserver(withHandle: usersRefHandle)
     }
     
     /// Updates albums table view by refetching each image url and album name.
@@ -141,12 +141,12 @@ class AlbumsTableViewController: UITableViewController {
         self.albums.removeAll()
         self.tableView.reloadData()
         // Listen for new Albums from Firebase database
-        usersRefHandle = self.databaseRef.child("users/\(userID)/albums").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        usersRefHandle = self.databaseRef.child("users/\(userID)/albums").observe(.childAdded, with: { (snapshot) in
             // get list of albums the user belongs to from the snapshot
             print("\(#function):: This user is a member of the following albums: \(snapshot.key)")
             let albumUserIsIn = snapshot.key
             // observesingleeventtype for each album
-            self.databaseRef.child("albums/\(albumUserIsIn)").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            self.databaseRef.child("albums/\(albumUserIsIn)").observeSingleEvent(of: .value, with: { (snapshot) in
                 // add album to table
                 print(snapshot.description)
                 self.albums.append(snapshot)

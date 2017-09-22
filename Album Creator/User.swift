@@ -11,7 +11,7 @@ import Foundation
 class User {
     var name: String
     var id: String
-    var profilePic: NSURL?
+    var profilePic: URL?
     var numOfAlbums: Int = 0
     var albums = [String]()
     
@@ -20,13 +20,13 @@ class User {
         self.id = id
     }
     
-    init(username: String, id: String, profilePic: NSURL?) {
+    init(username: String, id: String, profilePic: URL?) {
         self.name = username
         self.id = id
         self.profilePic = profilePic
     }
     
-    init(username: String, id: String, profilePic: NSURL?, albumName: String) {
+    init(username: String, id: String, profilePic: URL?, albumName: String) {
         self.name = username
         self.id = id
         self.profilePic = profilePic

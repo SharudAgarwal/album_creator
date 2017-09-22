@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 protocol CollectionViewCellProtocol {
-    func setImage(imageView: UIImageView) -> Void
+    func setImage(_ imageView: UIImageView) -> Void
 }
