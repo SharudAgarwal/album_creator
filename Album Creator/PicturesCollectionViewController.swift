@@ -177,7 +177,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: pictureReuseIdentifier, for: indexPath) as! PicturesCollectionViewCell
         let pictureSnapshot = self.pictures[indexPath.row]
         let pictureJSON = JSON(pictureSnapshot.value!)
-        print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL)")
+        print("\(#function):: pictures.count = \(pictures.count) & albumThumbnail = \(self.album.thumbnailURL as Optional)")
         if (pictureJSON[Constants.PictureFields.pathToImage].string != nil) {
             setCellImageView(cell: cell, snapshotJSON: pictureJSON, storageRef: storageRef)
         } else {
@@ -189,7 +189,7 @@ class PicturesCollectionViewController: UICollectionViewController, UIImagePicke
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // This will cancel all unfinished downloading task when the cell disappearing.
         // swiftlint:disable force_cast
-        (cell as! PicturesCollectionViewCell).pictureImageView.kf_cancelDownloadTask()
+        (cell as! PicturesCollectionViewCell).pictureImageView.kf.cancelDownloadTask()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

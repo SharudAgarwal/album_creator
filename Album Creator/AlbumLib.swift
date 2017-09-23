@@ -75,7 +75,7 @@ func setCellImageView(cell: UICollectionViewCell, snapshotJSON: JSON, storageRef
             if let error = error {
                 print("\(#function):: error = \(error.localizedDescription)")
             } else {
-                print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
+                print("\(#function):: successfully grabbed url = \(URL?.absoluteString as Optional)")
                 imageCell.albumImageView.kf.setImage(with: URL!)
             }
         }
@@ -88,7 +88,7 @@ func setCellImageView(cell: UICollectionViewCell, snapshotJSON: JSON, storageRef
             if let error = error {
                 print("\(#function):: error = \(error.localizedDescription)")
             } else {
-                print("\(#function):: successfully grabbed url = \(URL?.absoluteString)")
+                print("\(#function):: successfully grabbed url = \(URL?.absoluteString as Optional)")
                 imageCell.pictureImageView.kf.setImage(with: URL!, placeholder: nil)
             }
         }

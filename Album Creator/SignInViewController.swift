@@ -105,7 +105,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             } else {
                 let currentUser = User(username: user!.displayName!, id: user!.uid)
 //                currentUser.name = user?.providerID //user?.displayName
-                currentUser.profilePic = user?.photoURL as! NSURL as URL
+                currentUser.profilePic = user?.photoURL
                 print("\(#function):: User now initialized with name \(currentUser.name) & id = \(currentUser.id)")
                 updateDatabaseWithName(root: "users", name: currentUser.name, databaseRef: self.databaseRef, id: currentUser.id)
                 self.performSegue(withIdentifier: self.albumsSegue, sender: currentUser)
@@ -123,7 +123,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             tabVC.selectedIndex = 0
             let nav = tabVC.selectedViewController as! UINavigationController
             if let destinationVC = nav.topViewController as? AlbumsCollectionViewController {
-                print("\(#function):: sender = \(sender)")
+                print("\(#function):: sender = \(sender as Optional)")
                 destinationVC.currentUser = sender as? User
             } else {
                 fatalError("Could not segue to a AlbumsCollectionViewController from SignInViewController")
@@ -131,7 +131,7 @@ class SignInViewController: UIViewController, FBSDKLoginButtonDelegate {
             activityIndicator.stopAnimating()
 //            HUD.hide()
         } else {
-            print("\(#function):: Segue identifier didn't match. Identifier = \(segue.identifier)")
+            print("\(#function):: Segue identifier didn't match. Identifier = \(segue.identifier as Optional)")
         }
     }
 
