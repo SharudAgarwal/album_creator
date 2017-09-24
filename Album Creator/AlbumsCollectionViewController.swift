@@ -52,7 +52,7 @@ class AlbumsCollectionViewController: UICollectionViewController, UIImagePickerC
 //    override func viewDidAppear(animated: Bool) {
 //    }
     
-    @IBAction func createNewAlbum(sender: UIBarButtonItem) {
+    @IBAction func createNewAlbum(_ sender: UIBarButtonItem) {
         let alertController = UIAlertController(title: "New Album", message:"Enter a name for this album.", preferredStyle: .alert)
         let addAction = UIAlertAction(title: "Save", style: .default) { _ in
             if let albumName = alertController.textFields![0].text {
